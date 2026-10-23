@@ -12,8 +12,8 @@ This is a one-person batch, so this single row covers 100% of the work.
 
 ## Presentation
 
-- Video link: `TODO: Google Drive (PSG account) or unlisted YouTube link, set to "Anyone with the link can view"`
-- Duration: `TODO: mm:ss` (maximum 12:00)
+- Video link: [Batch 16 presentation video (Google Drive)](https://drive.google.com/file/d/19fNrNIihZ6z_f8T9Upg9RO1jXk7jWnCt/view?usp=sharing) — presented by Sankar S V (sole member). The video is hosted on Google Drive and is not committed to this repository.
+- Duration: 10:11 (maximum 12:00)
 - Slides: [slides.pdf](slides.pdf)
 - Speaking notes: [presentation_script.md](presentation_script.md) (about 10 minutes)
 
