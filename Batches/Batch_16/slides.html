@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Batch 16 Best Trading Window</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  :root {
+    --ink: #1b2433; --muted: #5b6577; --line: #d9dee7; --bg: #ffffff;
+    --navy: #17324d; --accent: #1f6f8b; --accent-soft: #e6f1f5;
+    --red: #b03a2e; --red-soft: #f8e9e7; --green: #2e7d4f; --green-soft: #e7f3ec;
+    --amber-soft: #fbf3e2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .slide { width: 13.333in; height: 7.5in; padding: 0.55in 0.7in 0.5in; position: relative;
+    page-break-after: always; break-after: page; overflow: hidden; display: flex; flex-direction: column; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .slide::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 0.12in; background: var(--navy); }
+  .foot { position: absolute; left: 0.7in; right: 0.7in; bottom: 0.22in; display: flex; justify-content: space-between;
+    font-size: 10.5pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 5px; }
+  h1 { font-size: 30pt; margin: 0 0 4px; color: var(--navy); letter-spacing: -0.3px; }
+  h2 { font-size: 25pt; margin: 0 0 14px; color: var(--navy); letter-spacing: -0.2px; }
+  h3 { font-size: 15pt; margin: 0 0 6px; color: var(--accent); }
+  p, li { font-size: 15pt; line-height: 1.35; margin: 0 0 6px; }
+  ul { margin: 0; padding-left: 1.1em; }
+  .kicker { font-size: 12pt; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35in; align-items: start; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.25in; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: #fbfcfd; }
+  .card.accent { background: var(--accent-soft); border-color: #bcd9e3; }
+  .card.red { background: var(--red-soft); border-color: #e9c4bf; }
+  .card.green { background: var(--green-soft); border-color: #bfdcca; }
+  .card.amber { background: var(--amber-soft); border-color: #ecd9ae; }
+  .eq { font-family: "Cambria Math", Cambria, "Times New Roman", serif; font-size: 18pt; line-height: 1.6; }
+  .eq b { color: var(--accent); }
+  .mono { font-family: Consolas, "Courier New", monospace; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5pt; }
+  th, td { border-bottom: 1px solid var(--line); padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-weight: 600; }
+  tr.hl td { background: var(--green-soft); font-weight: 600; }
+  .big { font-size: 40pt; font-weight: 700; color: var(--green); }
+  .small { font-size: 11pt; color: var(--muted); }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 11pt; font-weight: 600; }
+  .tag.g { background: var(--green-soft); color: var(--green); }
+  .tag.r { background: var(--red-soft); color: var(--red); }
+  .arr { display: flex; gap: 4px; margin: 6px 0 4px; }
+  .arr div { flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 6px; padding: 6px 0;
+    font-size: 15pt; font-weight: 600; background: #fff; }
+  .arr div.win { background: var(--green-soft); border-color: #8cc3a2; color: var(--green); }
+  .arr div.win2 { background: var(--accent-soft); border-color: #8fbfd0; color: var(--accent); }
+  .idx { display: flex; gap: 4px; }
+  .idx div { flex: 1; text-align: center; font-size: 10pt; color: var(--muted); }
+  .title-slide { justify-content: center; background: linear-gradient(135deg, #f4f8fb 0%, #ffffff 60%); }
+  .title-slide h1 { font-size: 40pt; }
+  img.plot { width: 100%; border: 1px solid var(--line); border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<!-- 1. Title -->
+<section class="slide title-slide">
+  <div class="kicker">23I501 Design and Analysis of Algorithms · Batch 16</div>
+  <h1>Stock Trading: Best Trading Window<br>in Distributed Tick Data</h1>
+  <p style="font-size:18pt;color:var(--muted);margin-top:10px">Divide and Conquer with a composable four-field summary</p>
+  <div class="card accent" style="margin-top:28px;max-width:9.6in">
+    <p style="margin:0"><b>Problem.</b> A brokerage stores net price changes for one stock across <b>8 servers</b>, each holding a contiguous date range
+    (25 years of minute ticks, about <b>2.4 × 10<sup>6</sup></b> values). Find the contiguous window with the <b>maximum total gain</b>.</p>
+  </div>
+  <p style="margin-top:28px;font-size:15pt">Sankar S V · PSG College of Technology · Odd Semester 2026–27</p>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>1</span></div>
+</section>
+
+<!-- 2. Model -->
+<section class="slide">
+  <div class="kicker">Problem modelling</div>
+  <h2>Input, output, objective and scale</h2>
+  <div class="grid2">
+    <div>
+      <h3>Given instance (₹ per day)</h3>
+      <div class="arr"><div>+3</div><div>−5</div><div class="win">+8</div><div class="win">−2</div><div class="win">+6</div><div class="win">−9</div><div class="win">+4</div><div class="win">+7</div><div>−3</div><div>−6</div><div>+5</div><div>+2</div></div>
+      <div class="idx"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div></div>
+      <p style="margin-top:14px"><b>Objective:</b> choose 1 ≤ i ≤ j ≤ n to maximise</p>
+      <p class="eq" style="font-size:18pt;margin-left:0.3in">G(i, j) = A[i] + A[i+1] + … + A[j]</p>
+      <p><b>Output:</b> the best sum and its window. Answer: <b>₹14 on days 3–8</b>.</p>
+      <p><b>Scale:</b> n ≈ 2.4 × 10<sup>6</sup>, split into 8 contiguous blocks of about 300,000 values.</p>
+    </div>
+    <div>
+      <table>
+        <tr><th>Decision</th><th>Choice</th></tr>
+        <tr><td>Window</td><td>Non-empty (all-negative data → best single tick)</td></tr>
+        <tr><td>Empty input</td><td>Rejected with an error</td></tr>
+        <tr><td>Ties</td><td>Max sum → earliest start → earliest end</td></tr>
+        <tr><td>Indexing</td><td>1-based in report and output, 0-based inside the code</td></tr>
+        <tr><td>Distributed need</td><td>Each server's result must be <b>composable</b> without shipping its ticks</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>2</span></div>
+</section>
+
+<!-- 3. Why D&C -->
+<section class="slide">
+  <div class="kicker">Design technique</div>
+  <h2>Why Divide and Conquer?</h2>
+  <div class="grid2">
+    <div>
+      <p>Cut the range anywhere. Every window of <b>L · R</b> is exactly one of three kinds:</p>
+      <div class="grid3" style="margin:12px 0 16px">
+        <div class="card"><h3>Left</h3><p>entirely in L</p></div>
+        <div class="card"><h3>Right</h3><p>entirely in R</p></div>
+        <div class="card accent"><h3>Crossing</h3><p>suffix of L + prefix of R</p></div>
+      </div>
+      <p>Each half can be described by a <b>constant-size summary</b>, and two adjacent summaries merge in <b>O(1)</b>.</p>
+      <p>The merge is <b>associative</b>, so any balanced merge tree works, provided left-to-right order is kept.</p>
+    </div>
+    <div class="card amber">
+      <h3>Divide · Conquer · Combine</h3>
+      <ul>
+        <li><b>Divide:</b> split by index (midpoint, or server boundary)</li>
+        <li><b>Conquer:</b> same problem on each contiguous block</li>
+        <li><b>Combine:</b> 4-field merge, O(1)</li>
+      </ul>
+      <p style="margin-top:12px">The same summary serves <b>8 servers</b>, a <b>segment tree</b> and a <b>disjoint sparse table</b>.</p>
+      <p class="small" style="margin-top:12px">We do not claim D&amp;C beats Kadane's O(n) sequentially. The gain is composability.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>3</span></div>
+</section>
+
+<!-- 4. Summary and merge -->
+<section class="slide">
+  <div class="kicker">Core idea</div>
+  <h2>Four-field summary and the merge</h2>
+  <div class="grid2">
+    <div>
+      <p class="eq" style="font-size:21pt">S = (total, prefix, suffix, best)</p>
+      <table style="margin:8px 0 14px">
+        <tr><th>Field</th><th>Meaning (non-empty)</th></tr>
+        <tr><td>total</td><td>sum of the whole segment</td></tr>
+        <tr><td>prefix</td><td>best sum starting at the left edge</td></tr>
+        <tr><td>suffix</td><td>best sum ending at the right edge</td></tr>
+        <tr><td>best</td><td>best window anywhere</td></tr>
+      </table>
+      <p>Leaf: <span class="eq" style="font-size:16pt">S(x) = (x, x, x, x)</span></p>
+      <p class="small">Plus metadata kept separate: prefix_end, suffix_start, best_start, best_end (for reconstructing windows).</p>
+    </div>
+    <div class="card accent">
+      <div class="eq">
+        total = L.total + R.total<br>
+        prefix = max(L.prefix, L.total + R.prefix)<br>
+        suffix = max(R.suffix, R.total + L.suffix)<br>
+        best = max(L.best, R.best, <b>L.suffix + R.prefix</b>)
+      </div>
+      <p style="margin-top:10px">The <b>bold</b> term is the best <b>crossing</b> window.</p>
+      <p>Sequential recursion: <span class="eq" style="font-size:16pt">T(n) = 2T(n/2) + Θ(1) = Θ(n)</span>, with O(log n) stack.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>4</span></div>
+</section>
+
+<!-- 5. Trace -->
+<section class="slide">
+  <div class="kicker">Q1 · Worked trace (generated by the code)</div>
+  <h2>Merging the given instance, level by level</h2>
+  <table style="font-size:11.5pt">
+    <tr><th style="width:15%">Level</th><th>Summaries (total, prefix, suffix, best) · best window</th></tr>
+    <tr><td>0 · leaves</td><td>S(x) = (x, x, x, x) for 3, −5, 8, −2, 6, −9, 4, 7, −3, −6, 5, 2</td></tr>
+    <tr><td>1 · pairs</td><td>[1,2] (−2, 3, −2, 3) · [3,4] (6, 8, 6, 8) · [5,6] (−3, 6, −3, 6) · [7,8] (11, 11, 11, 11) · [9,10] (−9, −3, −6, −3) · [11,12] (7, 7, 7, 7)</td></tr>
+    <tr><td>2 · fours</td><td>[1,4] (4, 6, 6, 8) best [3,3] · [5,8] (8, 8, 11, 11) best [7,8] · [9,12] (−2, −2, 7, 7) best [11,12]</td></tr>
+    <tr><td>3 · eight</td><td>[1,8] = merge([1,4], [5,8]) → <b>(12, 12, 14, 14)</b> · [9,12] carried unchanged</td></tr>
+    <tr class="hl"><td>4 · root</td><td>[1,12] = merge([1,8], [9,12]) → (10, 12, 12, 14) · best window [3, 8]</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card accent">
+      <h3>Key merge: [1,4] + [5,8]</h3>
+      <p class="eq" style="font-size:15pt;line-height:1.45">best = max(8, 11, <b>6 + 8 = 14</b>) = 14<br>prefix = max(6, 4 + 8 = 12) = 12<br>suffix = max(11, 8 + 6 = 14) = 14</p>
+      <p>The suffix of [1,4] is A[3..4] = 6, and the prefix of [5,8] is the whole block, 8. Together they cross the boundary.</p>
+    </div>
+    <div class="card green">
+      <h3>Answer</h3>
+      <p><span class="big">₹14</span> &nbsp; on days <b>3 → 8</b></p>
+      <p class="eq" style="font-size:16pt">8 − 2 + 6 − 9 + 4 + 7 = 14</p>
+      <p class="small">At the root, the crossing candidate is 14 + (−2) = 12 and the right block's best is 7, so the left 14 survives. The program output matches.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>5</span></div>
+</section>
+
+<!-- 6. Distributed -->
+<section class="slide">
+  <div class="kicker">Q2 · Eight-server design</div>
+  <h2>Summaries travel, ticks stay</h2>
+  <div class="grid2" style="grid-template-columns: 1.15fr 1fr">
+    <div>
+      <svg viewBox="-130 0 770 330" width="100%" style="font-family:Segoe UI,Arial,sans-serif">
+        <g font-size="17" text-anchor="middle">
+          <!-- servers -->
+          <g fill="#e6f1f5" stroke="#1f6f8b">
+            <rect x="8" y="240" width="66" height="40" rx="6"/><rect x="88" y="240" width="66" height="40" rx="6"/>
+            <rect x="168" y="240" width="66" height="40" rx="6"/><rect x="248" y="240" width="66" height="40" rx="6"/>
+            <rect x="328" y="240" width="66" height="40" rx="6"/><rect x="408" y="240" width="66" height="40" rx="6"/>
+            <rect x="488" y="240" width="66" height="40" rx="6"/><rect x="568" y="240" width="66" height="40" rx="6"/>
+          </g>
+          <g fill="#17324d"><text x="41" y="265">S1</text><text x="121" y="265">S2</text><text x="201" y="265">S3</text><text x="281" y="265">S4</text><text x="361" y="265">S5</text><text x="441" y="265">S6</text><text x="521" y="265">S7</text><text x="601" y="265">S8</text></g>
+          <!-- round 1 -->
+          <g stroke="#9aa6b8" stroke-width="1.5" fill="none">
+            <path d="M41 240 L81 192 M121 240 L81 192 M201 240 L241 192 M281 240 L241 192 M361 240 L401 192 M441 240 L401 192 M521 240 L561 192 M601 240 L561 192"/>
+            <path d="M81 168 L161 118 M241 168 L161 118 M401 168 L481 118 M561 168 L481 118"/>
+            <path d="M161 94 L321 46 M481 94 L321 46"/>
+          </g>
+          <g fill="#fff" stroke="#17324d">
+            <rect x="51" y="168" width="60" height="24" rx="5"/><rect x="211" y="168" width="60" height="24" rx="5"/>
+            <rect x="371" y="168" width="60" height="24" rx="5"/><rect x="531" y="168" width="60" height="24" rx="5"/>
+            <rect x="126" y="94" width="70" height="24" rx="5"/><rect x="446" y="94" width="70" height="24" rx="5"/>
+          </g>
+          <rect x="271" y="16" width="100" height="30" rx="6" fill="#e7f3ec" stroke="#2e7d4f"/>
+          <g fill="#17324d" font-size="15"><text x="81" y="185">1–2</text><text x="241" y="185">3–4</text><text x="401" y="185">5–6</text><text x="561" y="185">7–8</text>
+            <text x="161" y="111">1–4</text><text x="481" y="111">5–8</text></g>
+          <text x="321" y="36" fill="#2e7d4f" font-weight="600">ROOT 1–8</text>
+          <g fill="#5b6577" font-size="17" text-anchor="start"><text x="-128" y="185">Round 1 · 4 merges</text><text x="-128" y="111">Round 2 · 2 merges</text><text x="-128" y="36">Round 3 · 1 merge</text><text x="-128" y="265">Local pass</text></g>
+          <text x="321" y="298" fill="#5b6577" font-size="15">Each server: one local pass over ≈ 300,000 ticks → 8 integers sent</text>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <table>
+        <tr><th>Quantity</th><th>Cost (p servers)</th></tr>
+        <tr><td>Local work per server</td><td>Θ(n/p)</td></tr>
+        <tr><td>Total work</td><td>Θ(n) + Θ(p) = Θ(n)</td></tr>
+        <tr><td>Coordinator merges</td><td>p − 1 = 7, each O(1)</td></tr>
+        <tr><td>Merge depth</td><td>⌈log₂ p⌉ = 3 rounds</td></tr>
+        <tr><td>Communication</td><td>p records of O(1) size, i.e. 64 integers</td></tr>
+        <tr><td>Ideal parallel time</td><td><b>O(n/p + log p)</b></td></tr>
+      </table>
+      <p class="small" style="margin-top:10px">Assumes balanced blocks, one core per server, data already local, and network or synchronisation cost negligible (or modelled separately). On one machine our simulation shows correctness, <b>not</b> speedup. No cluster timings are claimed.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>6</span></div>
+</section>
+
+<!-- 7. Complexity vs Kadane -->
+<section class="slide">
+  <div class="kicker">Q3 · Complexity and the single scan</div>
+  <h2>Divide and Conquer vs Kadane's O(n) scan</h2>
+  <div class="grid2" style="grid-template-columns: 1.3fr 1fr">
+    <table>
+      <tr><th>Aspect</th><th>Kadane scan</th><th>D&amp;C summary</th></tr>
+      <tr><td>Time</td><td>Θ(n)</td><td>Θ(n) total work</td></tr>
+      <tr><td>Extra space</td><td>O(1)</td><td>O(log n) stack</td></tr>
+      <tr><td>Constant factor</td><td>smaller</td><td>2n − 1 calls, 8-field records</td></tr>
+      <tr><td>Parallelism</td><td>sequential (E[i] needs E[i−1])</td><td>independent blocks, O(n/p + log p)</td></tr>
+      <tr><td>Composability</td><td>no</td><td>associative O(1) merge</td></tr>
+      <tr><td>Range queries</td><td>rescan [L, R]</td><td>segment tree node value</td></tr>
+      <tr><td>Point updates</td><td>rescan</td><td>O(log n) with a segment tree</td></tr>
+    </table>
+    <div>
+      <div class="card green" style="margin-bottom:12px"><h3>Kadane wins when…</h3><p>one machine, one full scan or a few queries: same Θ(n), less memory, smaller constants.</p></div>
+      <div class="card accent" style="margin-bottom:12px"><h3>D&amp;C wins when…</h3><p>data is already partitioned, or many range queries and updates reuse the summary.</p></div>
+      <p class="small">Recursion depth for n = 2.4 × 10<sup>6</sup> is 23 frames. The 2n − 1 calls happen over time, not on the stack at once. Network latency per round can erase the benefit of extra servers, so there is no automatic 8× speedup.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>7</span></div>
+</section>
+
+<!-- 8. Data structures -->
+<section class="slide">
+  <div class="kicker">Q4 · Repeated "best window between day L and day R"</div>
+  <h2>Three structures, one associative summary</h2>
+  <table>
+    <tr><th>Structure</th><th>Build</th><th>Query</th><th>Point update</th><th>Space</th><th>At n ≈ 2.4 × 10<sup>6</sup></th></tr>
+    <tr><td>Direct scan (Kadane on [L, R])</td><td>O(1)</td><td>O(R − L + 1)</td><td>O(1)</td><td>O(1)</td><td>Fine for a few queries, but each long query costs millions of steps</td></tr>
+    <tr class="hl"><td>Segment tree of summaries</td><td>O(n)</td><td>O(log n), ≈ 22 levels</td><td>O(log n)</td><td>O(n)</td><td><b>Recommended:</b> frequent queries plus occasional corrections</td></tr>
+    <tr><td>Disjoint sparse table</td><td>O(n log n)</td><td>O(1) merges</td><td>rebuild</td><td>O(n log n)</td><td>Only for frozen history with huge query volume</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card amber"><h3>Order matters</h3><p>The merge is associative but <b>not commutative</b>. Queries must combine pieces left to right.</p></div>
+    <div class="card red"><h3>Why not a classic sparse table?</h3><p>The overlapping trick relies on min(x, x) = x. Our merge is <b>not idempotent</b>, so overlap would double-count ticks. The disjoint variant uses one ordered merge of two disjoint pieces.</p></div>
+  </div>
+  <p class="small" style="margin-top:10px">All three are implemented and tested against direct scans on every (L, R) pair of random arrays. Memory is discussed asymptotically and was not measured.</p>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>8</span></div>
+</section>
+
+<!-- 9. Rejections -->
+<section class="slide">
+  <div class="kicker">Technique selection</div>
+  <h2>Why not the other four techniques?</h2>
+  <table style="font-size:14.5pt">
+    <tr><th style="width:16%">Technique</th><th>Concrete evidence</th><th style="width:22%">Verdict</th></tr>
+    <tr><td><b>Greedy</b></td><td>Rule "never bridge a negative": on [5, −1, −1, −1, 5] it returns 5, but the optimum is the whole array, 7. Refutes that rule, not every greedy idea.</td><td><span class="tag r">rule is wrong</span></td></tr>
+    <tr><td><b>Dynamic Programming</b></td><td>Kadane, E[i] = max(A[i], E[i−1] + A[i]), is a <b>correct</b> O(n) DP. Its state depends on everything to the left, so it is not a self-contained segment value for servers or tree nodes.</td><td><span class="tag g">correct</span> not the primary architecture</td></tr>
+    <tr><td><b>Backtracking</b></td><td>Search space n(n+1)/2. At n = 2.4 × 10<sup>6</sup> that is <b>2,880,001,200,000</b> windows, about 6 × 10<sup>5</sup> times the ≈ 4.8 × 10<sup>6</sup> steps of a linear method.</td><td><span class="tag r">Θ(n²)</span> benchmarked baseline</td></tr>
+    <tr><td><b>Branch &amp; Bound</b></td><td>Pruning needs a sound and tight bound. With signed data, "current + all remaining positives" is far too optimistic, so little is pruned and the search stays Θ(n²) in the worst case. Tight bounds are the prefix and suffix summaries themselves.</td><td><span class="tag r">no effective bound</span></td></tr>
+  </table>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>9</span></div>
+</section>
+
+<!-- 10. Two windows -->
+<section class="slide">
+  <div class="kicker">Q5 · Changed requirement</div>
+  <h2>At most two non-overlapping windows</h2>
+  <div class="grid2">
+    <div>
+      <p>The 4-field summary stores <b>one</b> window per segment, so it cannot represent pairs. Extending the state would work, but a prefix/suffix DP is simpler to prove.</p>
+      <div class="card accent" style="margin:10px 0">
+        <p class="eq" style="font-size:15.5pt;line-height:1.5">P[i] = best window in A[1..i] &nbsp;(forward Kadane)<br>Q[i] = best window in A[i..n] &nbsp;(backward Kadane)<br>
+        answer = max( P[n], max<sub>i&lt;n</sub> P[i] + Q[i+1] )</p>
+      </div>
+      <p>Every pair [a,b], [c,d] with b &lt; c is counted at split i = b. A single window covers the "at most" case. For n = 1 the answer is A[1].</p>
+      <p><b>Time O(n), space O(n).</b> For up to k windows, a DP runs in O(kn) time with O(k) state.</p>
+    </div>
+    <div>
+      <h3>Given instance</h3>
+      <div class="arr"><div>+3</div><div>−5</div><div class="win">+8</div><div class="win">−2</div><div class="win">+6</div><div>−9</div><div class="win2">+4</div><div class="win2">+7</div><div>−3</div><div>−6</div><div>+5</div><div>+2</div></div>
+      <div class="idx"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div></div>
+      <p style="margin-top:12px"><span class="big" style="font-size:32pt">₹23</span> = [3,5] (12) + [7,8] (11)</p>
+      <p>That is ₹9 more than the single window, because the pair skips the −9 on day 6.</p>
+      <p class="small">Tested against exhaustive enumeration of all windows and disjoint pairs (600 random arrays). In a distributed setting, use a parallel prefix/suffix scan or an extended associative summary.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>10</span></div>
+</section>
+
+<!-- 11. Implementation and results -->
+<section class="slide">
+  <div class="kicker">Implementation and evidence</div>
+  <h2>Tests and measured performance</h2>
+  <div class="grid2" style="grid-template-columns: 1.55fr 1fr">
+    <div>
+      <img class="plot" src="results/timing_plot.png" alt="Measured running time of the chosen and rejected algorithms">
+      <p class="small">Measured with CPython 3.14.4 on Windows 11. Median of 7 runs after a warm-up, GC paused, same seeded input for both algorithms. Answers are asserted equal before timing.</p>
+    </div>
+    <div>
+      <table style="font-size:12pt">
+        <tr><th>n</th><th>D&amp;C (ms)</th><th>Exhaustive (ms)</th></tr>
+        {{TIMING_ROWS}}
+      </table>
+      <p style="margin-top:8px;font-size:13.5pt">Doubling n: about <b>×2</b> for D&amp;C and about <b>×4</b> for exhaustive search.</p>
+      <p style="font-size:13.5pt"><b>24 / 24</b> unit tests pass (given instance, edge cases, ties, 2,000 random brute-force checks, associativity, segment tree, sparse table, two windows).</p>
+      <p class="small">{{LARGE_NOTE}}</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>11</span></div>
+</section>
+
+<!-- 12. Conclusion -->
+<section class="slide">
+  <div class="kicker">Conclusion</div>
+  <h2>Takeaways and real-world reference</h2>
+  <div class="grid2">
+    <div>
+      <ul>
+        <li>Best window for the instance: <b>₹14, days 3–8</b>. With two windows: <b>₹23</b>.</li>
+        <li>A 4-field summary with an O(1) associative merge makes the problem <b>composable</b>.</li>
+        <li>8 servers: Θ(n) work, 7 merges in 3 rounds, 64 integers sent, ideal time O(n/p + log p).</li>
+        <li>For a single sequential scan, Kadane is equally Θ(n) and leaner.</li>
+        <li>For repeated [L, R] queries with updates, use a segment tree of summaries.</li>
+        <li>Greedy, Backtracking and Branch &amp; Bound were rejected with evidence. DP is correct but not the primary architecture.</li>
+      </ul>
+    </div>
+    <div class="card accent">
+      <h3>MapReduce (Dean &amp; Ghemawat, OSDI 2004)</h3>
+      <p>Map on local splits, then reduce: the same shape as local summaries plus a coordinator merge. <b>Difference:</b> our reduce is order-sensitive (associative, not commutative), and we only simulate the servers.</p>
+      <p class="small">research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters</p>
+      <h3 style="margin-top:12px">cp-algorithms: Segment Tree</h3>
+      <p class="small">"Finding subsegments with the maximal sum": the same (sum, prefix, suffix, answer) node.<br>cp-algorithms.com/data_structures/segment_tree.html</p>
+    </div>
+  </div>
+  <div class="foot"><span>Batch 16 · Best Trading Window</span><span>12</span></div>
+</section>
+
+</body>
+</html>
