@@ -163,3 +163,99 @@ If no charging station is reachable and the destination is outside the available
 The implementation returns the selected charging stops, the total number of stops, the total charging time, and the feasibility status.
 
 The implementation follows the greedy strategy and avoids exploring unnecessary combinations of charging stations.
+
+
+## 3. Correctness of the Greedy Algorithm
+
+The greedy algorithm selects the farthest reachable charging station at every step. This section explains why this strategy produces a feasible route with the minimum number of charging stops.
+
+### 3.1 Greedy Choice Property
+
+At any current position, the truck can travel at most 120 km before requiring another charge.
+
+The algorithm selects the farthest charging station within this reachable distance.
+
+This is a locally optimal choice because it allows the truck to travel as far as possible before making the next charging stop. Selecting a station closer to the current position would use a charging stop without making as much progress along the route.
+
+### 3.2 Exchange Argument
+
+Consider an optimal solution that selects a charging station O as its first stop from the current position.
+
+Let G be the farthest reachable charging station selected by the greedy algorithm.
+
+Since G is the farthest reachable station, G must be at the same position as O or farther along the route.
+
+We can replace O with G without increasing the number of charging stops.
+
+Any later charging station that was reachable from O will also be reachable from G because G is farther along the route. Therefore, this replacement does not make the remaining journey more difficult.
+
+Thus, there exists an optimal solution that begins with the same choice as the greedy algorithm.
+
+### 3.3 Inductive Proof
+
+The correctness of the algorithm can also be established using induction.
+
+**Base Case:**
+
+If the destination is within 120 km of the starting position, the truck can reach the destination without any charging stops. The greedy algorithm correctly returns zero stops, which is optimal.
+
+**Inductive Hypothesis:**
+
+Assume that the greedy algorithm produces an optimal solution for the remaining journey after a particular charging stop.
+
+**Inductive Step:**
+
+From the current position, the greedy algorithm selects the farthest reachable charging station.
+
+By the exchange argument, this choice can be part of an optimal solution. After reaching this station, the remaining problem has the same structure as the original problem.
+
+By the inductive hypothesis, the greedy algorithm also produces an optimal solution for the remaining journey.
+
+Therefore, the complete route produced by the greedy algorithm uses the minimum possible number of charging stops.
+
+**Conclusion:**
+
+The greedy algorithm is correct because it always makes a farthest-reachable choice that can be included in an optimal solution.
+
+## 4. Complexity Analysis
+
+Let `n` represent the number of available charging stations and `k` represent the number of charging stops selected by the algorithm.
+
+### 4.1 Time Complexity
+
+The algorithm first sorts the charging stations in ascending order.
+
+- Sorting the stations requires `O(n log n)` time.
+- After sorting, the algorithm scans the stations to identify the farthest reachable station.
+- Each station is processed at most once in an efficient forward-scan implementation, requiring `O(n)` time.
+
+Therefore:
+
+**Time Complexity:**
+
+- If the stations are already sorted: `O(n)`.
+- Including sorting: `O(n log n)`.
+
+### 4.2 Space Complexity
+
+The algorithm stores the selected charging stations in an output list.
+
+If `k` charging stops are selected, the output list requires `O(k)` space.
+
+The sorting operation may also require additional implementation-dependent memory.
+
+**Auxiliary Space Complexity:** `O(1)` for the scan itself, excluding sorting and the output list.
+
+**Output Space Complexity:** `O(k)`.
+
+### 4.3 Complexity Summary
+
+| Operation | Time Complexity |
+|---|---|
+| Sorting charging stations | O(n log n) |
+| Greedy station selection | O(n) |
+| Total time including sorting | O(n log n) |
+| Total time if already sorted | O(n) |
+| Output storage | O(k) |
+
+The greedy method is efficient because it avoids checking every possible combination of charging stations. It processes the sorted stations in a single forward scan.
