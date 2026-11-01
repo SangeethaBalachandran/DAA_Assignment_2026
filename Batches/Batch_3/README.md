@@ -638,6 +638,51 @@ Therefore, there are **2,674,440 possible join orders** for 15 tables.
 
 Enumerating all possible join orders becomes computationally expensive as the number of tables increases. Dynamic Programming avoids repeatedly solving the same subproblems and finds the optimal join order in O(n³) time and O(n²) space for a chain of n relations.
 
+### Q2. Find the cheapest join order and its cost for the instance, showing every intermediate result your method computes.
+
+**Given input:**
+
+`p = [40, 20, 30, 10, 30, 15]`
+
+The Dynamic Programming algorithm evaluates every continuous subchain and stores its minimum join cost.
+
+**Intermediate Results:**
+
+| Subchain | Minimum Cost | Optimal Parenthesisation |
+|---|---:|---|
+| R1 to R2 | 24,000 | R1 JOIN R2 |
+| R2 to R3 | 6,000 | R2 JOIN R3 |
+| R3 to R4 | 9,000 | R3 JOIN R4 |
+| R4 to R5 | 4,500 | R4 JOIN R5 |
+| R1 to R3 | 14,000 | R1 JOIN (R2 JOIN R3) |
+| R2 to R4 | 12,000 | (R2 JOIN R3) JOIN R4 |
+| R3 to R5 | 9,000 | R3 JOIN (R4 JOIN R5) |
+| R1 to R4 | 26,000 | (R1 JOIN (R2 JOIN R3)) JOIN R4 |
+| R2 to R5 | 13,500 | (R2 JOIN R3) JOIN (R4 JOIN R5) |
+| R1 to R5 | 24,500 | ((R1 JOIN (R2 JOIN R3)) JOIN (R4 JOIN R5)) |
+
+**Optimal Join Operations:**
+
+| Step | Join Operation | Intermediate Dimensions | Join Cost |
+|---|---|---|---:|
+| 1 | R2 JOIN R3 | 20 × 10 | 6,000 |
+| 2 | R1 JOIN (R2 JOIN R3) | 40 × 10 | 8,000 |
+| 3 | R4 JOIN R5 | 10 × 15 | 4,500 |
+| 4 | Combine the two intermediate results | 40 × 15 | 6,000 |
+
+**Total Minimum Cost:**
+
+= 6,000 + 8,000 + 4,500 + 6,000
+
+= **24,500**
+
+**Final Answer:**
+
+- **Cheapest join order:** `((R1 JOIN (R2 JOIN R3)) JOIN (R4 JOIN R5))`
+- **Minimum total join cost:** `24,500`
+
+The Dynamic Programming algorithm finds this result by evaluating all possible splitting positions and retaining the minimum cost for each subchain.
+
 ### Q3. A colleague proposes: "Always join the cheapest adjacent pair first." Evaluate this approach on the given instance.
 
 The proposed approach is a Greedy algorithm. It repeatedly selects the adjacent pair with the lowest immediate join cost.
