@@ -115,9 +115,52 @@ The input you constructed, and how your algorithm behaves on it.
 
 Answer the last question of your scenario: how the solution changes, whether the technique still holds, and the new complexity.
 
-## 12. Answers to the remaining scenario questions
+## 12. Remaining Scenario Questions
 
-Answer each numbered question from your scenario not already covered above.
+### Q1. Count the possible join orders for 5 tables and 15 tables. Why is trying them all impractical?
+
+The number of possible ways to fully parenthesise a chain of n relations is given by the Catalan number C(n-1).
+
+**Catalan Number Formula:**
+
+C(m) = (1 / (m + 1)) × (2m)! / (m! × m!)
+
+**For 5 tables:**
+
+- Number of relations = 5
+- Possible join orders = C(5 - 1) = C(4)
+- C(4) = 14
+
+Therefore, there are **14 possible join orders** for 5 tables.
+
+**For 15 tables:**
+
+- Number of relations = 15
+- Possible join orders = C(15 - 1) = C(14)
+- C(14) = 2,674,440
+
+Therefore, there are **2,674,440 possible join orders** for 15 tables.
+
+**Comparison:**
+
+| Number of Tables | Possible Join Orders |
+|---|---:|
+| 5 | 14 |
+| 10 | 4,862 |
+| 12 | 58,786 |
+| 15 | 2,674,440 |
+
+**Why is enumeration impractical?**
+
+- The number of possible join orders grows rapidly according to Catalan numbers.
+- Every possible parenthesisation must be generated and evaluated.
+- The cost of every join order must be calculated and compared.
+- As the number of tables increases, the computational effort becomes very high.
+- For 15 tables alone, more than 2.6 million possible join orders must be considered.
+
+**Conclusion:**
+
+Enumerating all possible join orders becomes computationally expensive as the number of tables increases. Dynamic Programming avoids repeatedly solving the same subproblems and finds the optimal join order in O(n³) time and O(n²) space for a chain of n relations.
 
 ## 13. Real-world reference
 
