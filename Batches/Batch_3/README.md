@@ -386,7 +386,7 @@ The proposed approach is a Greedy algorithm. It repeatedly selects the adjacent 
 
 **Given input:**
 
-p = [40, 20, 30, 10, 30, 15]
+`p = [40, 20, 30, 10, 30, 15]`
 
 **Step 1: Calculate initial adjacent join costs.**
 
