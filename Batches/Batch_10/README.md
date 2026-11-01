@@ -3,9 +3,9 @@
 **Course:** 23I501 Design and Analysis of Algorithms, PSG College of Technology
 
 **Members:**
-- Member 1: Sriram A - [Your Roll No] - GitHub: `srii-noir`
-- Member 2: Purushothaman S - 24I344 - GitHub: `[His Username]`
-- Member 3: Praveen Kumaran - 24I340 - GitHub: `[His Username]`
+- Member 1: Sriram A - 24I362 - GitHub: `srii-noir`
+- Member 2: Purushothaman S - 24I344 - GitHub: `purushoths3004`
+- Member 3: Praveen Kumaran - 24I340 - GitHub: `praveen1204062028`
 
 **Presentation video:** (https://drive.google.com/file/d/1_x5O0_69i6G-3phNrqo_w2wwql-n_DLY/view?usp=sharing)
 **NOTE:** DOWNLOAD THIS AND LISTEN IN POWERPOINT
@@ -17,9 +17,9 @@
 
 | Member (name, roll no., GitHub) | Files committed | README sections | Slides | Video part |
 |---|---|---|---|---|
-| Member 1: Sriram A ([Your Roll No], srii-noir) | `code/main_solution.py`, `slides.pdf` | 1, 2, 3, 5 | 1-3, 5 | Problem model, data structures, why Branch & Bound, algorithm demo |
-| Member 2: Purushothaman S (24I344, [His Username]) | `code/rejected_alternative.py`, `code/generate_inputs.py` | 4, 7, 8, 9 | 4, 6, 7 | Rejecting other techniques, Greedy counterexample, Timing analysis |
-| Member 3: Praveen Kumaran (24I340, [His Username]) | `README.md`, `results/*` | 6, 10, 11, 12 | 8, 9, 10 | Trace, Proof of correctness, Complex constraints (Q5), Real-world |
+| Member 1: Sriram A (24I362, srii-noir) | `code/main_solution.py`, `slides.pdf` | 1, 2, 3, 5 | 1-3, 5 | Problem model, data structures, why Branch & Bound, algorithm demo |
+| Member 2: Purushothaman S (24I344, purushoths3004) | `code/rejected_alternative.py`, `code/generate_inputs.py` | 4, 7, 8, 9 | 4, 6, 7 | Rejecting other techniques, Greedy counterexample, Timing analysis |
+| Member 3: Praveen Kumaran (24I340, praveen1204062028) | `README.md`, `results/*` | 6, 10, 11, 12 | 8, 9, 10 | Trace, Proof of correctness, Complex constraints (Q5), Real-world |
 
 Each member commits their own contribution using their own GitHub account.
 
