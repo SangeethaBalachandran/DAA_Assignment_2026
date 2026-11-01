@@ -259,3 +259,148 @@ The sorting operation may also require additional implementation-dependent memor
 | Output storage | O(k) |
 
 The greedy method is efficient because it avoids checking every possible combination of charging stations. It processes the sorted stations in a single forward scan.
+## 5. Experimental Evaluation
+
+The greedy charging-stop algorithm was implemented in Python and tested using different input sizes to evaluate its performance.
+
+The experiments compare the execution time of the selected greedy algorithm with an alternative approach. Different numbers of charging stations are generated to observe how the execution time changes as the input size increases.
+
+### 5.1 Experimental Setup
+
+The experiment uses the following setup:
+
+- Programming language: Python.
+- Input: Different sets of charging station positions.
+- Input sizes: Multiple values of `n`, representing the number of charging stations.
+- Selected algorithm: Greedy farthest-reachable charging station algorithm.
+- Comparison algorithm: Alternative Dynamic Programming implementation.
+- Performance metric: Execution time in milliseconds.
+
+The charging station positions are sorted before applying the greedy algorithm. Both implementations are tested using generated inputs to compare their execution times.
+
+### 5.2 Results
+
+The measured execution times are recorded in the file:
+
+`results/timing.csv`
+
+The corresponding performance graph is available at:
+
+`results/timing_plot.png`
+
+The graph illustrates how the execution time changes with increasing input size.
+
+### 5.3 Analysis
+
+The greedy algorithm scans the sorted charging stations and selects the farthest reachable station.
+
+Its time complexity is `O(n)` when the stations are already sorted and `O(n log n)` when sorting is included.
+
+The straightforward Dynamic Programming implementation considers possible previous stations when calculating the minimum number of stops. Its time complexity is `O(n²)`.
+
+Therefore, the greedy approach is expected to scale more efficiently for larger input sizes under the assumptions of this problem.
+
+Actual execution times may vary depending on the system configuration, Python environment, and input data.
+
+## 6. Extensions and Real-World Applications
+
+The implemented greedy algorithm solves the basic EV charging problem under fixed-range and equal-stop-cost assumptions. However, real-world EV charging scenarios may involve additional constraints such as variable charging prices, different charging speeds, and changing battery ranges.
+
+### 6.1 Variable Driving Range
+
+In a more complex scenario, the vehicle may have different driving ranges depending on the charging station, battery condition, or road conditions.
+
+This can be modelled as a directed graph:
+
+- Each charging station represents a vertex.
+- A directed edge from station `i` to station `j` exists if the vehicle can travel from `i` to `j` using the available range after charging at `i`.
+- The destination is represented as the final vertex.
+
+Breadth-First Search (BFS) can be used to find a route with the minimum number of charging transitions when each transition has equal cost.
+
+### 6.2 Variable Charging Costs
+
+The farthest-reachable greedy strategy minimises the number of stops under the assumptions of the original problem. However, it may not minimise the total charging cost when electricity prices differ between stations.
+
+Consider the following example:
+
+- Maximum driving range: 120 km.
+- Charging stations: 60 km, 110 km, and 180 km.
+- Destination: 240 km.
+- Electricity price at 60 km: ₹1 per unit.
+- Electricity price at 110 km: ₹10 per unit.
+- Electricity price at 180 km: ₹1 per unit.
+
+The farthest-first strategy may choose the station at 110 km. It arrives with 10 units of range remaining and needs to purchase 70 units at ₹10 each. It then purchases another 60 units at ₹1 each at the 180 km station.
+
+Total cost:
+
+`(70 × ₹10) + (60 × ₹1) = ₹760`
+
+A cheaper strategy is to stop at 60 km, purchase 60 units at ₹1 each, travel to 180 km, and purchase another 60 units at ₹1 each.
+
+Total cost:
+
+`(60 × ₹1) + (60 × ₹1) = ₹120`
+
+This demonstrates that farthest-first is not always the best strategy when the objective is to minimise charging cost.
+
+For variable prices and partial charging, a state-based shortest-path or Dynamic Programming approach can be used.
+
+### 6.3 Real-World Application
+
+The concepts used in this project are relevant to electric vehicle route-planning systems.
+
+For example, **A Better Routeplanner (ABRP)** is a real-world EV trip-planning service that helps drivers plan charging stops based on vehicle and journey information.
+
+Reference links:
+
+- Website: https://abetterrouteplanner.com/home
+- Charging stops help: https://abrp.featurebase.app/en/help/articles/4023913-charging-stops
+
+Our project uses a simplified model to demonstrate how algorithm design can help optimise charging-stop decisions.
+
+## 7. Conclusion
+
+This project applies the Greedy Method to solve the EV charging-stop optimisation problem for a 350 km journey from Chennai to Bengaluru.
+
+The vehicle has a maximum driving range of 120 km per full charge, and charging stations are available at predefined kilometre positions.
+
+By selecting the farthest reachable charging station at every step, the algorithm identifies the route:
+
+`0 → 95 → 210 → 330 → 350 km`
+
+The final result is:
+
+- Minimum charging stops: 3.
+- Selected charging stations: 95 km, 210 km, and 330 km.
+- Total charging-stop time: 120 minutes.
+- Journey feasibility: Feasible.
+
+The correctness of the greedy strategy is supported by an exchange argument and induction. Its time complexity is `O(n)` when the stations are already sorted and `O(n log n)` when sorting is included.
+
+The experimental evaluation compares the greedy algorithm with a Dynamic Programming alternative. The results demonstrate the efficiency of the greedy approach for the given problem assumptions.
+
+We also explored extensions for more realistic scenarios involving variable driving ranges and charging costs.
+
+Overall, the project demonstrates that the Greedy Method provides an efficient and optimal solution for the given problem assumptions, while more complex optimisation techniques are required when additional real-world constraints are introduced.
+
+## 8. Team Contributions and Presentation
+
+### 8.1 Team Contributions
+
+| Member | Contribution |
+|---|---|
+| Member 1 | Problem definition, input-output specification, constraints, assumptions, and introduction. |
+| Member 2 | Greedy algorithm design, algorithm steps, pseudocode, and Python implementation. |
+| Member 3 | Correctness proof, exchange argument, induction, and complexity analysis. |
+| Member 4 | Alternative algorithm implementation, input generation, experimental testing, and performance evaluation. |
+| Member 5 | README integration, experimental results presentation, extensions, real-world applications, conclusion, and final presentation coordination. |
+
+### 8.2 Presentation
+
+The team presentation explains the problem, selected algorithm, implementation, correctness, complexity, experimental evaluation, and possible extensions.
+
+**Presentation recording:** [Insert Google Drive or YouTube link here]
+
+**Presentation slides:** `slides.pdf`
