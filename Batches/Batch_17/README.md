@@ -288,8 +288,8 @@ The number of updates equals n·B exactly, and doubling n quadruples the time (n
 | Srinitha M | 24i361 | 24i361-Srinitha | Performance benchmarking, timing data collection, timing graph, worst-case analysis, and changed-requirement analysis |
 
 ## 14. Presentation link
-Recorded presentation:
-Duration:
+Recorded presentation: https://drive.google.com/file/d/1gOlTX8BQANCc6wjxuaQ3haW6dW4K1wFm/view?usp=drive_web
+Duration: 13 mins
 
 ## 15. References
 
