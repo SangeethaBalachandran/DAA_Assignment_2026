@@ -61,21 +61,70 @@
 
 A two-dimensional array is the most suitable data structure because our problem requires storing the minimum join cost for every possible continuous subchain. It provides constant-time access and updates, supports bottom-up Dynamic Programming, and allows easy reconstruction of the optimal join order using a separate split table. It is simpler and more appropriate for the given chain-based problem than a hash map or adjacency list.
 
-## 3. Design technique identification
+## 3. Design Technique Identification
 
-- Technique chosen:
-- Property of the problem that makes it work (with proof):
+### 3.1 Selected Technique: Dynamic Programming
 
-## 4. Why the other four techniques do not fit
+Dynamic Programming is selected to solve the database join ordering problem because it avoids repeatedly calculating the same subproblems and finds the minimum-cost join order.
 
-Give concrete evidence for each: a counterexample, a subproblem count, a state-space size, or a missing bound. One-line answers such as "not efficient" earn no marks.
+**Properties that make Dynamic Programming suitable:**
 
-| Technique | Why it is unsuitable here (evidence) |
-|---|---|
-| | |
-| | |
-| | |
-| | |
+**1. Optimal Substructure:**
+
+- An optimal solution for a larger subchain contains optimal solutions for its smaller subchains.
+- A chain Ri through Rj can be divided at a splitting position k into two smaller subchains.
+- The minimum cost of the complete subchain is obtained by combining the optimal costs of these two smaller subchains and the final join cost.
+- If either smaller subchain is not optimal, replacing it with its optimal solution would reduce the total cost.
+
+**2. Overlapping Subproblems:**
+
+- Different parenthesisations may require the same intermediate subchains.
+- For example, the subchain R2 JOIN R3 may occur in multiple possible join orders.
+- Calculating the same subchain repeatedly wastes computation.
+- Dynamic Programming stores the result of each subproblem in a table and reuses it whenever required.
+
+**Conclusion:**
+
+Dynamic Programming is suitable because the problem has optimal substructure and overlapping subproblems. It reduces repeated calculations and finds the optimal join order in O(n³) time and O(n²) space.
+
+## 4. Why the Other Four Techniques Do Not Fit
+
+### 4.1 Greedy Method
+
+- The Greedy method makes a locally optimal choice at every step without considering all future consequences.
+- In this problem, selecting the cheapest adjacent pair first does not always produce the globally minimum join cost.
+- For the given instance, the greedy approach produces a total cost of 30,000, whereas Dynamic Programming produces 24,500.
+- Therefore, the greedy-choice property does not hold.
+
+### 4.2 Divide and Conquer
+
+- Divide and Conquer divides a problem into smaller independent subproblems, solves them recursively and combines their results.
+- In join ordering, the same subchains can occur in multiple parenthesisations.
+- A straightforward recursive implementation may calculate these subchains repeatedly.
+- For example, the cost of joining R2 and R3 may be recalculated in different recursive branches.
+- This leads to unnecessary repeated computations and exponential growth in the number of recursive possibilities.
+- Dynamic Programming avoids this by storing and reusing calculated subproblem results.
+
+### 4.3 Backtracking
+
+- Backtracking explores possible join orders by constructing different parenthesisations.
+- It may need to examine every possible valid parenthesisation to guarantee the optimal result.
+- The number of possible join orders is given by Catalan numbers.
+- For 5 tables, there are 14 possible join orders.
+- For 15 tables, there are 2,674,440 possible join orders.
+- Therefore, exhaustive backtracking becomes expensive as the number of tables increases.
+
+### 4.4 Branch and Bound
+
+- Branch and Bound explores possible solutions and prunes partial solutions using a lower bound.
+- It can reduce the search space when strong lower bounds are available.
+- However, for this chain problem, weak bounds may fail to eliminate many partial join orders.
+- Its worst-case running time remains exponential.
+- Dynamic Programming is more suitable because it systematically solves all required subchains in polynomial time.
+
+**Conclusion:**
+
+Dynamic Programming is preferred because it uses optimal substructure and overlapping subproblems to avoid repeated calculations. Greedy may produce a non-optimal result, Divide and Conquer repeats subproblems, Backtracking explores an exponentially growing search space, and Branch and Bound may still require exponential exploration.
 
 ## 5. Algorithm
 
@@ -330,6 +379,91 @@ Therefore, there are **2,674,440 possible join orders** for 15 tables.
 **Conclusion:**
 
 Enumerating all possible join orders becomes computationally expensive as the number of tables increases. Dynamic Programming avoids repeatedly solving the same subproblems and finds the optimal join order in O(n³) time and O(n²) space for a chain of n relations.
+
+### Q3. A colleague proposes: "Always join the cheapest adjacent pair first." Evaluate this approach on the given instance.
+
+The proposed approach is a Greedy algorithm. It repeatedly selects the adjacent pair with the lowest immediate join cost.
+
+**Given input:**
+
+p = [40, 20, 30, 10, 30, 15]
+
+**Step 1: Calculate initial adjacent join costs.**
+
+| Adjacent Join | Cost |
+|---|---:|
+| R1 JOIN R2 | 40 × 20 × 30 = 24,000 |
+| R2 JOIN R3 | 20 × 30 × 10 = 6,000 |
+| R3 JOIN R4 | 30 × 10 × 30 = 9,000 |
+| R4 JOIN R5 | 10 × 30 × 15 = 4,500 |
+
+The cheapest adjacent pair is R4 JOIN R5.
+
+Cost = 4,500.
+
+**Step 2: Join the remaining cheapest adjacent pair.**
+
+After joining R4 and R5, the remaining groups are:
+
+R1, R2, R3, (R4 JOIN R5)
+
+The adjacent join costs are:
+
+| Adjacent Join | Cost |
+|---|---:|
+| R1 JOIN R2 | 24,000 |
+| R2 JOIN R3 | 6,000 |
+| R3 JOIN (R4 JOIN R5) | 30 × 10 × 15 = 4,500 |
+
+The cheapest pair is R3 JOIN (R4 JOIN R5).
+
+Cost = 4,500.
+
+**Step 3: Join the remaining cheapest adjacent pair.**
+
+The remaining groups are:
+
+R1, R2, (R3 JOIN R4 JOIN R5)
+
+| Adjacent Join | Cost |
+|---|---:|
+| R1 JOIN R2 | 24,000 |
+| R2 JOIN (R3 JOIN R4 JOIN R5) | 20 × 30 × 15 = 9,000 |
+
+The cheapest pair is R2 JOIN (R3 JOIN R4 JOIN R5).
+
+Cost = 9,000.
+
+**Step 4: Perform the final join.**
+
+The remaining groups are:
+
+R1, (R2 JOIN R3 JOIN R4 JOIN R5)
+
+Final join cost:
+
+40 × 20 × 15 = 12,000
+
+**Total Greedy Cost:**
+
+= 4,500 + 4,500 + 9,000 + 12,000
+
+= **30,000**
+
+**Comparison with Dynamic Programming:**
+
+| Approach | Total Join Cost |
+|---|---:|
+| Greedy | 30,000 |
+| Dynamic Programming | 24,500 |
+
+Difference = 30,000 - 24,500 = 5,500.
+
+The Greedy approach produces a cost that is approximately 22.45% higher than the optimal cost.
+
+**Conclusion:**
+
+The Greedy approach does not guarantee the globally optimal join order because choosing the cheapest immediate adjacent pair may lead to expensive future joins. Dynamic Programming is better because it evaluates all possible splitting positions and guarantees the minimum total join cost for the given chain.
 
 ## 13. Real-world reference
 
