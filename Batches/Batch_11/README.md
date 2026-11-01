@@ -1,459 +1,557 @@
-# Batch 11 – Publishing: Paragraph Layout in an E-Reader
+# Batch 11 — Publishing: Paragraph Layout in an E-Reader
 
-**Course:** 23I501 – Design and Analysis of Algorithms  
-**Institution:** PSG College of Technology  
-**Academic Year:** 2026–2027  
-**Batch:** 11  
-**Programming Language:** Python 3.9 or later  
-**Selected Design Technique:** Dynamic Programming
+## Team
 
----
-
-# Team Details and Contributions
-
-| Roll Number | Name | GitHub Username | Part Presented | Contribution |
+| Roll No. | Name | GitHub username | Part presented | Contribution (code, report sections) |
 |---|---|---|---|---|
-| 24I351 | Sabarinathan L | sabarinathan50 | Execution Instructions | Prepared `RUN.md` with project requirements, execution commands, and instructions for running the algorithms and generating benchmark results. |
-| 24I337 | Om Arya SP | arya1485553-cyber | Greedy Alternative | Prepared `rejected_alternative.md` explaining the rejected Greedy approach and its comparison with the selected algorithm. |
-| 24I321 | Karthick B | karthick25-car | Team Lead – Results and Presentation | Coordinated the team, managed project results, prepared presentation slides, and handled the timing graph (`timing_plot.png`). |
-| 24I367 | Tarun A | Tarun24i367 | Dynamic Programming | Implemented the selected Dynamic Programming solution in `main_solution.py`. |
-| 24I375 | Vishal V | Vishal24i375 | Benchmarking and Input Generation | Developed `generate_inputs.py` to generate benchmark inputs, measure execution times, and produce timing results. |
+| 24I351 | Sabarinathan L | [sabarinathan50](https://github.com/sabarinathan50) | Execution instructions | Prepared `code/RUN.md`, including software requirements, execution commands, and instructions for running the algorithms and generating benchmark results. |
+| 24I337 | Om Arya SP | [arya1485553-cyber](https://github.com/arya1485553-cyber) | Rejected alternative | Implemented the greedy alternative in `code/rejected_alternative.py` for comparison with the dynamic programming solution. |
+| 24I321 | Karthick B | [karthick25-car](https://github.com/karthick25-car) | Results and presentation | Coordinated the team, managed the results, prepared the presentation slides, and generated the timing graph. |
+| 24I367 | Tarun A | [Tarun24i367](https://github.com/Tarun24i367) | Main solution | Implemented the optimal dynamic programming algorithm in `code/main_solution.py`. |
+| 24I375 | Vishal V | [Vishal24i375](https://github.com/Vishal24i375) | Input generation and benchmarking | Prepared `code/generate_inputs.py`, generated benchmark inputs, measured execution times, and produced timing results. |
+
+## Presentation
+
+- **Video link:** [Batch 11 Presentation](https://drive.google.com/file/d/1U1lMdO1MDSZbVZ2eUVc4u86fEu4gMC7p/view?usp=sharing)
+- **Duration:** 8 minutes 58 seconds
+- **Slides:** [slides.pdf](slides.pdf)
 
 ---
 
-# 1. Problem Modelling
-
-## Problem Statement
-
-An e-reader application must arrange a sequence of words into lines of a fixed maximum width `W`.
-
-The application should format the paragraph so that the total penalty caused by unused spaces is minimized.
-
-The penalty for each non-final line is the cube of its unused spaces. The last line of the paragraph has no penalty.
+## 1. Problem modelling
 
 ### Input
-
-- A sequence of `n` words.
-- Maximum line width `W`.
+- A sequence of `n` words in their original order.
+- A fixed maximum line width `W`, measured in characters.
+- Each word has a positive character length.
 
 ### Output
-
-- An arrangement of words into valid lines.
-- The minimum total penalty.
+- A paragraph divided into lines.
+- Every word must appear in its original order.
+- No word can be split between two lines.
+- Every line must fit within the maximum width.
 
 ### Objective
 
-Minimize the total penalty of all lines.
+Minimize the total penalty of the paragraph.
 
-For a non-final line:
-
-\[
-Penalty = (Unused\ Spaces)^3
-\]
-
-For the final line:
+For every line except the last line:
 
 \[
-Penalty = 0
+Penalty=(Unused\ Spaces)^3
 \]
+
+The last line has zero penalty.
+
+If a line contains words whose total length is `L`, and it contains `k` words, its used width is:
+
+\[
+UsedWidth=L+(k-1)
+\]
+
+The unused spaces are:
+
+\[
+Slack=W-UsedWidth
+\]
+
+Therefore, the total penalty is:
+
+\[
+TotalPenalty=\sum_{i=1}^{m-1}(W-UsedWidth_i)^3
+\]
+
+where `m` is the total number of lines.
 
 ### Constraints
 
 1. Words must remain in their original order.
-2. Words cannot be split between lines.
-3. Every line must fit within the maximum width `W`.
-4. At least one word must be placed on each line.
-5. The last line has zero penalty.
+2. Words cannot be divided.
+3. Each line must have a width less than or equal to `W`.
+4. The final line has zero penalty.
+5. The total penalty must be minimum.
 
-### Problem Classification
+### Problem class
 
-This is a text formatting and optimization problem. It can be solved using Dynamic Programming because the optimal arrangement can be constructed from optimal arrangements of smaller groups of words.
+**Optimisation problem**, because the objective is to find a paragraph arrangement with the minimum possible penalty.
+
+### Classical problem it maps to
+
+This problem maps to the classical **Word Wrap Problem**, also called the **Text Justification Problem**.
+
+Dynamic programming is used to find the best line breaks instead of choosing each line independently.
 
 ---
 
-# 2. Data Structure Analysis
+## 2. Data structure analysis
 
-The following data structures are used in the implementation.
+| Data structure | Key operation(s) and cost | Space | Behaviour at the scale in the scenario |
+|---|---|---|---|
+| **Chosen: Python lists with prefix-sum, DP, and parent arrays** | Prefix-sum calculation takes O(1) for a range. DP transitions examine valid previous line positions. | O(n) | Efficient for processing a large sequence of words and reconstructing the final paragraph. |
+| Alternative 1: Two-dimensional DP table | Stores results for multiple ranges or states. Access takes O(1). | O(n²) | Uses more memory than necessary because the solution only needs the best cost for each prefix. |
+| Alternative 2: Recursive memoization using a dictionary | Looks up previously calculated states in O(1) average time. | O(n) memoization space, plus recursion stack | Avoids repeated calculations, but recursion can cause additional overhead and deep recursion for large inputs. |
 
-| Data Structure | Purpose |
+### Why the chosen structure wins
+
+The chosen implementation uses Python lists because they provide efficient indexed access.
+
+A prefix-sum array helps calculate the total character length of a group of words without repeatedly adding every word length.
+
+The DP array stores the minimum penalty for each prefix of the paragraph. A parent array stores the starting position of the selected last line, allowing the final layout to be reconstructed.
+
+This approach uses O(n) auxiliary space and avoids the extra memory required by a two-dimensional table or the function-call overhead of recursion.
+
+---
+
+## 3. Design technique identification
+
+### Technique chosen: Dynamic Programming
+
+Dynamic programming is used because the problem has:
+
+1. **Optimal substructure**
+2. **Overlapping subproblems**
+
+### Optimal substructure
+
+The optimal arrangement of the first `j` words depends on the optimal arrangement of a smaller prefix.
+
+If the last line contains words from position `i` to `j`, the previous words must already have an optimal arrangement.
+
+Therefore, the solution can be built using previously calculated optimal results.
+
+### Overlapping subproblems
+
+While calculating the minimum penalty for different prefixes, the algorithm repeatedly needs the best result for earlier prefixes.
+
+Instead of solving the same subproblem repeatedly, dynamic programming stores the result in the DP array and reuses it.
+
+### Why dynamic programming works
+
+The algorithm checks all valid choices for the last line of each prefix and selects the choice with the minimum total penalty.
+
+Since all valid previous line arrangements are considered, the algorithm finds the globally minimum penalty.
+
+---
+
+## 4. Why the other four techniques do not fit
+
+| Technique | Why unsuitable (evidence) |
 |---|---|
-| List | Stores the input words |
-| Prefix Sum Array | Helps calculate the total length of consecutive words efficiently |
-| Dynamic Programming Array | Stores the minimum penalty for each prefix of words |
-| Variables | Store line width, unused spaces and calculated penalty |
+| Greedy | Greedy chooses a line using a local decision without considering the complete paragraph. For the example in Section 7, greedy produces a penalty of 133, while dynamic programming produces 43. Therefore, greedy does not always produce the optimal answer. |
+| Divide and Conquer | Dividing the paragraph into independent halves does not directly solve the problem because the best line breaks can cross the division boundary. The cost of a prefix also depends on earlier prefixes. A divide-and-conquer implementation would need additional state handling or memoization to reuse overlapping results. |
+| Backtracking | Each gap between consecutive words can either contain a line break or not. For `n` words, there are `n-1` gaps and therefore `2^(n-1)` possible line arrangements before checking constraints. For 12 words, this gives 2,048 possible arrangements. This becomes expensive for large paragraphs. |
+| Branch and Bound | Branch and Bound can prune arrangements that exceed the line width, but it still explores possible line arrangements. A simple lower bound of zero is weak because all penalty values are non-negative. Dynamic programming avoids repeatedly exploring the same prefix states. |
 
-### Why These Data Structures Are Suitable
-
-- Lists provide convenient access to words.
-- Prefix sums avoid repeatedly calculating the length of word groups.
-- The DP array stores previously calculated minimum penalties.
-- These structures help reduce unnecessary calculations.
+Dynamic programming is the most suitable technique because it reuses previously calculated results and guarantees the minimum penalty.
 
 ---
 
-# 3. Design Technique Identification
+## 5. Algorithm
 
-## Selected Technique: Dynamic Programming
-
-Dynamic Programming is selected because the paragraph layout problem has two important properties.
-
-### 1. Optimal Substructure
-
-The optimal arrangement of the first `j` words can be obtained by combining the optimal arrangement of an earlier group of words with a valid final line.
-
-### 2. Overlapping Subproblems
-
-The minimum penalty for earlier groups of words is needed repeatedly while evaluating different line arrangements.
-
-Dynamic Programming stores these results and reuses them instead of calculating them again.
-
-## Recurrence Relation
+### State definition
 
 Let:
 
-- `DP[j]` = Minimum penalty for arranging the first `j` words.
-- `W` = Maximum line width.
-- `Cost(i,j)` = Penalty for placing words `i` through `j` on one line.
+- `n` = number of words.
+- `W` = maximum line width.
+- `dp[j]` = minimum penalty for arranging the first `j` words.
+- `parent[j]` = starting index of the final line in the optimal arrangement of the first `j` words.
+- `prefix[j]` = total character length of the first `j` words.
 
 Initially:
 
 \[
-DP[0] = 0
+dp[0]=0
 \]
 
-For every valid line ending at word `j`:
+For every other state:
 
 \[
-DP[j] = \min_{1 \leq i \leq j}
-\left(DP[i-1] + Cost(i,j)\right)
+dp[j]=\infty
 \]
 
-Only valid line arrangements that fit within width `W` are considered.
+### Recurrence relation
 
-The cost is calculated as follows:
+Suppose the last line contains words from position `i` to `j`.
 
-- If the line is the final line of the complete paragraph, its cost is zero.
-- Otherwise, its cost is the cube of its unused spaces.
-
-The algorithm selects the arrangement with the minimum total penalty.
-
----
-
-# 4. Why the Other Four Design Techniques Do Not Fit
-
-The assignment considers five design techniques. Dynamic Programming is selected, and the other four are evaluated below.
-
-## A. Divide and Conquer
-
-Divide and Conquer divides a problem into independent smaller problems and combines their results.
-
-However, paragraph layout decisions are dependent on previous line breaks. The minimum cost of a later group depends on the best arrangement of the earlier words.
-
-Therefore, directly dividing the paragraph into independent parts does not guarantee a globally optimal result.
-
-## B. Greedy Algorithm
-
-A Greedy algorithm makes the locally best choice at each step.
-
-For this problem, a Greedy approach can place as many words as possible on the current line.
-
-However, this does not always minimize the total cubic penalty.
-
-**Example:**
-
-Let the line width be:
+The used width is:
 
 \[
-W = 16
+UsedWidth=prefix[j]-prefix[i-1]+(j-i)
 \]
 
-Input words:
-
-`A clear model of the problem is half of the final answer`
-
-One possible Greedy arrangement is:
-
-| Line | Words | Unused Spaces | Penalty |
-|---|---|---:|---:|
-| 1 | A clear model of | 0 | 0 |
-| 2 | the problem is | 2 | 8 |
-| 3 | half of the | 5 | 125 |
-| 4 | final answer | Final line | 0 |
-
-Total penalty:
+If:
 
 \[
-0 + 8 + 125 = 133
+UsedWidth>W
 \]
 
-A better arrangement found using Dynamic Programming is:
+the line is invalid and is not considered.
 
-| Line | Words | Unused Spaces | Penalty |
-|---|---|---:|---:|
-| 1 | A clear model | 3 | 27 |
-| 2 | of the problem | 2 | 8 |
-| 3 | is half of the | 2 | 8 |
-| 4 | final answer | Final line | 0 |
-
-Total penalty:
+Otherwise, the line penalty is:
 
 \[
-27 + 8 + 8 = 43
+LineCost=
+\begin{cases}
+0 & \text{if }j=n\\
+(W-UsedWidth)^3 & \text{otherwise}
+\end{cases}
 \]
 
-Since 43 is less than 133, this example shows that the Greedy arrangement is not always optimal.
+The recurrence is:
 
-Therefore, Greedy is rejected as the main technique.
+\[
+dp[j]=\min_{1\leq i\leq j}
+\left(dp[i-1]+LineCost(i,j)\right)
+\]
 
-## C. Backtracking
+Only valid line arrangements are considered.
 
-Backtracking explores different possible arrangements and checks whether they satisfy the constraints.
-
-For this problem, it may explore a large number of possible line breaks.
-
-As the number of words increases, the number of arrangements can grow significantly.
-
-Dynamic Programming is more suitable because it stores and reuses solutions to overlapping subproblems.
-
-## D. Branch and Bound
-
-Branch and Bound explores possible solutions while using bounds to eliminate branches that cannot improve the current best solution.
-
-However, it requires suitable bounds to prune the search effectively.
-
-For this problem, Dynamic Programming provides a more direct method of calculating the minimum penalty without repeatedly exploring the same subproblems.
-
-## Comparison
-
-| Technique | Reason for Rejection |
-|---|---|
-| Divide and Conquer | Subproblems are not independent |
-| Greedy | Local choices do not always give the minimum total penalty |
-| Backtracking | Explores too many possible arrangements |
-| Branch and Bound | Requires additional bounds and search management |
-| Dynamic Programming | Selected because it reuses optimal subproblem results |
-
----
-
-# 5. Algorithm Pseudocode
-
-**Input:** List of words and maximum line width `W`.
-
-**Output:** Minimum total paragraph layout penalty.
+### Pseudocode
 
 ```text
 WORD_WRAP(words, W):
 
     n = number of words
 
-    Create DP array of size n + 1
-    Initialize all DP values to infinity
+    Create prefix array
+    prefix[0] = 0
 
-    DP[0] = 0
+    for i = 1 to n:
+        prefix[i] = prefix[i-1] + length(words[i-1])
 
-    For j from 1 to n:
+    Create dp array of size n+1
+    Create parent array of size n+1
 
-        For i from j down to 1:
+    Set all dp values to infinity
+    dp[0] = 0
 
-            Calculate the total width of words
-            from i to j, including spaces
+    for j = 1 to n:
 
-            If total width is greater than W:
-                Stop checking earlier starting positions
+        for i = j down to 1:
 
-            Calculate unused spaces
+            used = prefix[j] - prefix[i-1] + (j-i)
 
-            If j is the final word:
-                line_cost = 0
-            Else:
-                line_cost = unused_spaces * unused_spaces
-                            * unused_spaces
+            if used > W:
+                break
 
-            DP[j] = minimum of:
-                    DP[j],
-                    DP[i - 1] + line_cost
+            if j == n:
+                cost = 0
+            else:
+                cost = (W-used)^3
 
-    Return DP[n]
+            candidate = dp[i-1] + cost
+
+            if candidate < dp[j]:
+                dp[j] = candidate
+                parent[j] = i
+
+    Reconstruct lines using parent array
+
+    return lines and dp[n]
 ```
 
-The actual Python implementation is available in:
+### Selection
 
-`code/main_solution.py`
+For every prefix, the algorithm selects the valid last line that produces the smallest total penalty.
+
+### Pruning
+
+When the used width exceeds `W`, the inner loop stops.
+
+Adding more words to the same line can only increase its width, so no earlier starting position can make that line valid.
 
 ---
 
-# 6. Proof of Correctness
+## 6. Proof of correctness
 
-The correctness of the algorithm can be explained using induction.
+We prove that the dynamic programming algorithm produces the minimum possible penalty.
 
-## Base Case
+### Base case
 
-When there are zero words, no line is required.
-
-Therefore:
+For zero words:
 
 \[
-DP[0] = 0
+dp[0]=0
 \]
 
-This is correct because the penalty is zero.
+This is correct because an empty paragraph has no line penalty.
 
-## Inductive Hypothesis
+### Inductive hypothesis
 
-Assume that `DP[k]` contains the minimum possible penalty for arranging the first `k` words, for every `k` smaller than `j`.
+Assume that `dp[k]` stores the minimum penalty for arranging the first `k` words correctly, for every `k` less than `j`.
 
-## Inductive Step
+### Inductive step
 
 Consider an optimal arrangement of the first `j` words.
 
-Its final line must contain some consecutive group of words from position `i` to `j`.
+Its final line must contain some consecutive words from position `i` to `j`.
 
-The words before position `i` must be arranged optimally. Otherwise, replacing their arrangement with a lower-penalty arrangement would improve the complete solution, contradicting optimality.
+The words before position `i` form the first `i-1` words.
 
-By the inductive hypothesis, the minimum penalty for the preceding words is:
+By the inductive hypothesis, `dp[i-1]` contains the minimum penalty for arranging those previous words.
+
+The algorithm considers every valid starting position `i` for the final line.
+
+It calculates:
 
 \[
-DP[i-1]
+dp[i-1]+LineCost(i,j)
 \]
 
-The algorithm considers every valid possible starting position `i` for the final line and adds the correct line cost.
+It then selects the minimum value among all valid choices.
 
-It selects the minimum among all these possibilities.
+Since every possible valid final line is considered, the algorithm cannot miss the optimal arrangement.
 
-Therefore, `DP[j]` stores the minimum possible penalty for the first `j` words.
+Therefore, `dp[j]` stores the minimum penalty for the first `j` words.
 
-By induction, `DP[n]` gives the minimum total penalty for the complete paragraph.
+### Conclusion
+
+By mathematical induction, `dp[n]` gives the minimum possible total penalty for the complete paragraph.
+
+The parent array stores the selected line boundaries, so the algorithm can reconstruct an arrangement that achieves this minimum.
 
 Hence, the algorithm is correct.
 
 ---
 
-# 7. Trace on the Given Instance
+## 7. Trace on given instance
 
 Consider the following example.
 
 **Input words:**
 
-`A clear model of the problem is half of the final answer`
+```text
+A clear model of the problem is half of the final answer
+```
 
 **Maximum line width:**
 
 \[
-W = 16
+W=16
 \]
 
-The Dynamic Programming algorithm evaluates valid line arrangements and selects the arrangement with the minimum total penalty.
+### Step 1: Greedy approach
 
-## Selected Arrangement
+The greedy approach places as many words as possible in each line.
 
-| Line | Words | Characters Used | Unused Spaces | Penalty |
+| Line | Words | Used width | Slack | Penalty |
+|---|---|---:|---:|---:|
+| 1 | A clear model of | 16 | 0 | 0 |
+| 2 | the problem is | 14 | 2 | 8 |
+| 3 | half of the | 11 | 5 | 125 |
+| 4 | final answer | 12 | 4 | 0 (last line) |
+
+Total penalty:
+
+\[
+0+8+125+0=\boxed{133}
+\]
+
+### Step 2: Dynamic programming approach
+
+The dynamic programming algorithm considers different possible line breaks and stores the minimum penalty for every prefix.
+
+The following table shows the minimum cost for each prefix.
+
+| Number of words | Prefix ending with | Minimum penalty `dp[j]` |
+|---:|---|---:|
+| 0 | Empty | 0 |
+| 1 | A | 3375 |
+| 2 | clear | 729 |
+| 3 | model | 27 |
+| 4 | of | 0 |
+| 5 | the | 793 |
+| 6 | problem | 35 |
+| 7 | is | 8 |
+| 8 | half | 764 |
+| 9 | of | 251 |
+| 10 | the | 43 |
+| 11 | final | 594 |
+| 12 | answer | 43 |
+
+### Step 3: Reconstruct the optimal lines
+
+Using the parent array, the selected line arrangement is:
+
+| Line | Words | Used width | Slack | Penalty |
 |---|---|---:|---:|---:|
 | 1 | A clear model | 13 | 3 | 27 |
 | 2 | of the problem | 14 | 2 | 8 |
 | 3 | is half of the | 14 | 2 | 8 |
-| 4 | final answer | 12 | Final line | 0 |
+| 4 | final answer | 12 | 4 | 0 (last line) |
 
-## Total Penalty
+### Step 4: Calculate total penalty
 
 \[
-27 + 8 + 8 + 0 = 43
+TotalPenalty=3^3+2^3+2^3+0
 \]
 
-**Minimum total penalty = 43**
+\[
+=27+8+8+0
+\]
 
-The final line is free, so it contributes zero penalty.
+\[
+\boxed{TotalPenalty=43}
+\]
+
+### Final comparison
+
+| Approach | Total penalty |
+|---|---:|
+| Greedy | 133 |
+| Dynamic Programming | **43** |
+
+Dynamic programming produces the lower penalty and gives the optimal line arrangement for this example.
 
 ---
 
-# 8. Complexity Analysis
+## 8. Complexity analysis
 
 Let:
 
-- `n` = Number of words.
-- `W` = Maximum line width.
+- `n` = number of words.
+- `W` = maximum line width.
 
-The algorithm uses a Dynamic Programming array and a prefix sum array.
+### Prefix-sum calculation
 
-For each word position, it checks possible previous line starting positions until the line width becomes invalid.
+The prefix-sum array is calculated by visiting each word once.
 
-With positive integer word lengths, the number of words that can fit in a line is bounded by the line width.
-
-## Time Complexity
-
-\[
-O(nW)
-\]
-
-This is the bound when the maximum number of candidate words per line is bounded by `W`.
-
-## Space Complexity
+Time complexity:
 
 \[
 O(n)
 \]
 
-The DP array and prefix sum array each require linear space.
+Space complexity:
 
-The exact number of iterations depends on the word lengths and the number of valid line arrangements.
+\[
+O(n)
+\]
+
+### Dynamic programming calculation
+
+For every word position `j`, the algorithm checks possible starting positions `i` for the last line.
+
+Since every word has at least one character, no more than `W` words can fit into a line of width `W`.
+
+Therefore, the number of candidates checked for each position is at most:
+
+\[
+\min(n,W)
+\]
+
+Total worst-case time:
+
+\[
+\boxed{O(n\min(n,W))}
+\]
+
+This is commonly expressed as:
+
+\[
+O(nW)
+\]
+
+when `W` is smaller than or equal to `n`.
+
+### Time complexity
+
+| Case | Time complexity | Explanation |
+|---|---|---|
+| Best case | O(n) | Only a constant number of candidate line positions are checked for each word. |
+| Worst case | O(n × min(n, W)) | Each prefix checks up to the maximum number of words that can fit in a line. |
+| Typical case | Depends on word lengths and width | The average number of valid candidate lines depends on the input word-length distribution. |
+
+For a fixed line width, the worst-case running time grows linearly with the number of words.
+
+### Space complexity
+
+The algorithm stores:
+
+- Prefix-sum array: O(n)
+- DP array: O(n)
+- Parent array: O(n)
+
+Therefore:
+
+\[
+\boxed{Space=O(n)}
+\]
+
+The reconstructed output also contains all `n` words.
 
 ---
 
-# 9. Worst-Case Input
+## 9. Worst-case input
 
-A worst-case input contains many short words that can fit together in different combinations within the line width.
+A worst-case input for the inner DP loop is a paragraph containing many one-character words.
 
-For example:
+Example:
 
-- Number of words: 2000
-- Maximum line width: 16
-- Words: Repeated short words such as `a`, `to`, `is`, and `in`
-
-This type of input allows the algorithm to examine many possible line endings.
-
-It is useful for measuring the performance of the implementation as the number of words increases.
-
-The benchmark script generates deterministic inputs for different sizes.
-
----
-
-# 10. Implementation and Empirical Analysis
-
-## Implementation
-
-The project is implemented using Python.
-
-The following files are included:
-
-| File | Purpose |
-|---|---|
-| `main_solution.py` | Implements the selected Dynamic Programming algorithm |
-| `rejected_alternative.py` | Implements the Greedy alternative |
-| `generate_inputs.py` | Generates benchmark inputs and measures execution time |
-| `RUN.md` | Contains execution instructions |
-
-## Experimental Setup
-
-The benchmark script tests five different input sizes:
-
-- 100 words
-- 250 words
-- 500 words
-- 1000 words
-- 2000 words
-
-The line width is set to 16 for the benchmark command.
-
-## Benchmark Command
-
-```bash
-python code/generate_inputs.py --sizes 100 250 500 1000 2000 --width 16
+```text
+a a a a a a a a a a a a a a a a ...
 ```
 
-## Actual Timing Results
+Let:
 
-The following values are the measured execution times from the benchmark results.
+\[
+W=16
+\]
 
-| Input Size (n) | Dynamic Programming Time (ms) | Greedy Time (ms) |
+Each line can contain several one-character words, including the spaces between them.
+
+Because each word is very short, the algorithm can examine many possible starting positions for each prefix before reaching the width limit.
+
+This creates a large number of DP transitions compared with inputs containing longer words.
+
+For a fixed `W`, the number of candidates per position is still bounded by `W`.
+
+Therefore, the worst-case time complexity remains:
+
+\[
+O(nW)
+\]
+
+The implementation also stops checking earlier positions as soon as a line exceeds the width.
+
+---
+
+## 10. Implementation and empirical analysis
+
+### Language and how to run
+
+The project is implemented using **Python 3.9 or later**.
+
+Refer to [code/RUN.md](code/RUN.md) for the complete installation requirements and execution commands.
+
+### Project files
+
+```text
+Batch_11/
+│
+├── README.md
+├── slides.pdf
+│
+├── code/
+│   ├── RUN.md
+│   ├── main_solution.py
+│   ├── rejected_alternative.py
+│   └── generate_inputs.py
+│
+└── results/
+    ├── timing.csv
+    └── timing_plot.png
+```
+
+### Input sizes used
+
+Five input sizes were used to compare the dynamic programming solution and the greedy alternative.
+
+The benchmark results are recorded in `results/timing.csv`.
+
+| Number of words | DP time (ms) | Greedy time (ms) |
 |---:|---:|---:|
 | 100 | 0.081012 | 0.012979 |
 | 250 | 0.199931 | 0.029925 |
@@ -461,125 +559,160 @@ The following values are the measured execution times from the benchmark results
 | 1000 | 0.923113 | 0.123146 |
 | 2000 | 1.951815 | 0.249296 |
 
-## Timing Results Interpretation
+### Timing plot
 
-- Dynamic Programming takes more execution time because it checks multiple valid line arrangements.
-- Greedy takes less execution time because it makes a local decision for each line.
-- As the input size increases, the execution time of both algorithms increases.
-- Dynamic Programming is selected because it provides the minimum penalty, while the Greedy alternative does not guarantee an optimal arrangement.
+![Timing plot](results/timing_plot.png)
 
-## Graph
+### Does measured growth match Section 8?
 
-The benchmark script generates the timing graph at:
+Yes. The measured execution time of the dynamic programming algorithm increases as the input size increases.
 
-`results/timing_plot.png`
+When the number of words increases from 500 to 1000, the execution time also increases approximately two times.
 
-The graph compares the execution times of Dynamic Programming and Greedy for the five input sizes.
+This is consistent with the expected behaviour when the line width is fixed.
 
-## Generated Output Files
+The theoretical worst-case complexity is O(nW). Since `W` is fixed in the benchmark, the growth is approximately linear in `n`.
 
-```text
-results/
-├── timing.csv
-└── timing_plot.png
-```
+Small differences in the measurements can occur because of Python execution overhead, machine performance, and input characteristics.
 
-- `timing.csv` stores the input sizes and execution times.
-- `timing_plot.png` provides a visual comparison of the algorithms.
+### Comparison with rejected alternative
 
-## Observation
+The greedy algorithm is faster in the measured experiments because it makes local decisions and does not calculate multiple DP states.
 
-The experimental results show that the Greedy approach is faster in the tested inputs. However, faster execution does not guarantee the minimum penalty.
+However, it does not always produce the minimum penalty.
 
-Dynamic Programming requires additional calculations but evaluates possible valid line arrangements to obtain the optimal result.
+The dynamic programming algorithm takes more time, but it guarantees an optimal arrangement.
 
-Execution times may vary depending on the computer and system workload.
+Therefore, dynamic programming is selected as the main solution because correctness and minimum penalty are more important than the small execution-time advantage of the greedy approach.
 
 ---
 
-# 11. Changed Requirement – Hyphenation
+## 11. Changed requirement
 
-## New Requirement
+### Changed requirement: Allow hyphenation of long words
 
-Suppose the e-reader application allows long words to be split across lines using hyphenation.
+In the original problem, words cannot be split between lines.
 
-The current implementation does not support this feature because it assumes that words cannot be split.
+If the requirement changes to allow hyphenation, a word may be divided into smaller parts when it does not fit on the current line.
 
-## Required Changes
+For example, a long word could be split at an allowed hyphenation position.
 
-1. Identify valid positions where a word can be split.
-2. Include the hyphen character in the line-width calculation.
-3. Consider the possible word fragments when generating line arrangements.
-4. Update the Dynamic Programming states to represent the additional splitting choices.
-5. Calculate the penalty for each valid arrangement.
-6. Select the arrangement with the minimum total penalty.
+### Changes required
 
-## Effect on the Algorithm
+1. Identify valid hyphenation positions in each word.
+2. Treat each valid split as an additional possible line break.
+3. Include the hyphen character in the used line width.
+4. Add an appropriate penalty for splitting a word.
+5. Update the DP transitions to consider both normal word boundaries and valid hyphenation boundaries.
 
-The number of possible choices increases because a word can now be placed completely on a line or split into valid parts.
+### Does dynamic programming still work?
 
-Dynamic Programming can still be used, but its state and transition rules must be extended to handle word fragments.
+Yes. Dynamic programming still works because the problem continues to have optimal substructure.
 
----
+The algorithm must consider more possible line-ending positions, including hyphenated parts.
 
-# 12. Remaining Scenario Questions
+### New complexity
 
-## Question 1: What happens if the line width changes?
+The complexity depends on the number of valid hyphenation positions.
 
-The algorithm can use a different value of `W`. It must recalculate valid line arrangements and their penalties for the new width.
+If the expanded input contains `N` possible break units and the maximum width is `W`, a similar bounded-width DP approach can take:
 
-## Question 2: What happens if a word is longer than the maximum line width?
+\[
+O(NW)
+\]
 
-The current implementation cannot place that word because splitting is not supported. The input must be validated, or the algorithm must be extended to support hyphenation.
-
-## Question 3: Why is the last line free?
-
-The problem statement specifies that the final line has no penalty. Therefore, its cost is set to zero.
-
-## Question 4: Why is the cubic penalty used?
-
-The cubic penalty gives a much higher cost to lines with large unused spaces. This encourages more balanced line arrangements.
-
-## Question 5: Why is Dynamic Programming better than Greedy?
-
-Dynamic Programming evaluates valid alternatives and selects the minimum total penalty. Greedy makes local decisions that may not produce the globally optimal arrangement.
+time and O(N) space, assuming the number of possible break units is represented in the expanded sequence.
 
 ---
 
-# 13. Real-World Reference
+## 12. Answers to remaining scenario questions
 
-Paragraph layout and line-breaking techniques are used in many digital publishing applications.
+### 1. Why is the last line free?
 
-Examples include:
+The last line of a paragraph does not need to fill the complete line width.
 
-- E-reader applications.
-- Digital books.
-- Word processors.
-- Document viewers.
-- Newspaper and magazine publishing systems.
-- Responsive text formatting applications.
+Therefore, unused spaces on the final line should not increase the penalty.
 
-These applications arrange text according to available screen width and formatting rules.
+This is represented by assigning zero cost whenever `j == n`.
 
-The paragraph layout problem demonstrates how optimization algorithms can improve text presentation and readability.
+### 2. Why is the unused-space penalty cubed?
+
+Cubing the unused spaces makes lines with large gaps much more expensive.
+
+For example:
+
+- Slack 1 gives penalty 1.
+- Slack 2 gives penalty 8.
+- Slack 3 gives penalty 27.
+
+This encourages the algorithm to avoid lines with large unused spaces.
+
+### 3. What happens if a word is longer than the maximum width?
+
+If a word itself is longer than `W`, it cannot fit on any line under the original constraints.
+
+The input must be rejected or the requirements must be changed to allow hyphenation or another special handling method.
+
+### 4. Why is the greedy approach not selected?
+
+Greedy makes a local decision by selecting words for the current line.
+
+It does not consider how that decision affects the remaining paragraph.
+
+The example in Section 7 demonstrates this: greedy produces a penalty of 133, while dynamic programming produces 43.
+
+### 5. Can the algorithm handle a large book?
+
+The algorithm can process a large sequence of words by solving the paragraph layout problem using dynamic programming.
+
+However, the implementation should process paragraphs separately when the input contains multiple paragraphs, because line breaks and the free final-line rule apply to each paragraph.
+
+For each paragraph containing `n` words, the algorithm uses O(n) space and O(n × min(n, W)) worst-case time.
 
 ---
 
-# Presentation Details
+## 13. Real-world reference
 
-- **Presentation Slides:** `slides.pdf`
-- **Presentation Video:** [Watch Batch 11 Presentation](https://drive.google.com/file/d/1U1lMdO1MDSZbVZ2eUVc4u86fEu4gMC7p/view?usp=sharing)
-- **Presentation Duration:** 8 minutes 58 seconds
-- **Team Members:** Sabarinathan L, Om Arya SP, Karthick B, Tarun A, Vishal V
+### Knuth–Plass line-breaking algorithm
 
-The presentation duration is within the maximum allowed time of 12 minutes.
+A well-known real-world application of dynamic programming in text layout is the **Knuth–Plass line-breaking algorithm**, introduced by Donald E. Knuth and Michael F. Plass in their 1981 research paper, *Breaking Paragraphs into Lines*.
 
-**Video Access:** Ensure the Google Drive sharing permission is set to "Anyone with the link" so the evaluator can access the presentation.
+The algorithm is used in the TeX typesetting system to choose good line-breaking positions across an entire paragraph.
+
+It uses three main concepts:
+
+- **Boxes:** Represent words or other fixed-width text elements.
+- **Glue:** Represents flexible spaces between words.
+- **Penalties:** Represent costs associated with possible line breaks.
+
+The algorithm considers the paragraph as a whole instead of making an independent decision for every line.
+
+### Difference from our implementation
+
+| Our implementation | Knuth–Plass algorithm |
+|---|---|
+| Uses character count to calculate line width. | Can use actual typesetting widths. |
+| Uses the cube of unused spaces as the penalty. | Uses a more detailed system of line-breaking demerits. |
+| Does not allow word splitting. | Can consider additional break opportunities, including hyphenation. |
+| Uses a simple DP recurrence for word boundaries. | Uses a more advanced global line-breaking method. |
+
+### Reference links
+
+- [Knuth and Plass — Breaking Paragraphs into Lines (1981)](https://doi.org/10.1002/spe.4380111102)
+- [Unicode Standard — Line Breaking Algorithm](https://unicode.org/reports/tr14/)
+
+The Knuth–Plass algorithm demonstrates how dynamic programming can be applied to real-world text formatting and publishing systems.
 
 ---
 
-**Project:** DAA Assignment – Batch 11  
-**Scenario:** Publishing – Paragraph Layout in an E-Reader  
-**Course:** 23I501 – Design and Analysis of Algorithms  
-**Programming Language:** Python  
-**Selected Technique:** Dynamic Programming
+## Conclusion
+
+This project implements the Word Wrap Problem using dynamic programming.
+
+The algorithm calculates the minimum penalty by considering valid line breaks and reusing previously computed results.
+
+The greedy alternative is faster in the benchmark experiments, but it does not guarantee an optimal paragraph layout.
+
+The dynamic programming solution produces the minimum penalty and uses O(n) space with O(n × min(n, W)) worst-case time complexity.
+
+This project demonstrates the importance of dynamic programming in solving optimisation problems involving overlapping subproblems and optimal substructure.
