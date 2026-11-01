@@ -60,3 +60,106 @@ The algorithm produces:
 **Design Technique:** Greedy Method  
 **Objective Function:** Minimize the total number of charging stops.  
 **Feasibility Condition:** The distance between any two consecutive charging points, including the starting point and destination, must not exceed 120 km.
+
+## 2. Greedy Algorithm Design
+
+The problem is solved using the **Greedy Method**, specifically the **Farthest-Reachable Charging Station Strategy**.
+
+At every step, the truck selects the farthest charging station that can be reached using its current battery charge. This allows the truck to cover the maximum possible distance before making the next charging stop, thereby reducing the total number of stops.
+
+### 2.1 Greedy Choice
+
+At the current position, let the maximum reachable distance be:
+
+`Current Position + 120 km`
+
+Among all available charging stations within this range, the algorithm selects the station with the greatest kilometre position.
+
+The selected station becomes the next charging point. The truck recharges fully at that station and repeats the same process until the destination is reachable.
+
+**Greedy Strategy:** Always choose the farthest reachable charging station.
+
+### 2.2 Algorithm Steps
+
+1. Sort all charging station positions in ascending order.
+2. Initialize the current position to 0 km (Chennai).
+3. Check whether the destination is reachable directly from the current position.
+4. If the destination is not reachable, identify all charging stations within 120 km of the current position.
+5. Select the farthest reachable charging station.
+6. If no charging station is reachable, declare the journey infeasible.
+7. Otherwise, add the selected station to the list of charging stops.
+8. Update the current position to the selected station.
+9. Repeat until the destination is within the truck's maximum travel range.
+10. Return the selected charging stations, total number of stops, total charging time, and journey feasibility.
+
+### 2.3 Pseudocode
+
+```text
+GREEDY-CHARGING-STOPS(stations, destination, range)
+
+    Sort stations in ascending order
+
+    current_position = 0
+    stops = empty list
+
+    Add destination to stations
+
+    while destination - current_position > range:
+
+        farthest_station = current_position
+
+        for each station in stations:
+
+            if station > current_position
+               and station - current_position <= range:
+
+                farthest_station = station
+
+            else if station - current_position > range:
+                break
+
+        if farthest_station == current_position:
+            return "Journey Not Feasible"
+
+        Add farthest_station to stops
+        current_position = farthest_station
+
+    total_stops = length(stops)
+    total_charging_time = total_stops * 40
+
+    return stops, total_stops, total_charging_time
+```
+
+### 2.4 Greedy Algorithm Execution for the Given Input
+
+The truck starts at kilometre 0 with a maximum range of 120 km.
+
+| Step | Current Position | Maximum Reach | Selected Station | Distance Travelled |
+|---|---:|---:|---:|---:|
+| 1 | 0 km | 120 km | 95 km | 95 km |
+| 2 | 95 km | 215 km | 210 km | 115 km |
+| 3 | 210 km | 330 km | 330 km | 120 km |
+| 4 | 330 km | 450 km | Destination (350 km) | 20 km |
+
+**Final Selected Route:**
+
+`0 → 95 → 210 → 330 → 350 km`
+
+**Algorithm Result:**
+
+- Selected charging stations: 95 km, 210 km, 330 km.
+- Minimum charging stops: 3.
+- Total charging time: 3 × 40 = 120 minutes.
+- Journey status: Feasible.
+
+### 2.5 Implementation Details
+
+The algorithm is implemented in Python. The implementation accepts the route distance, maximum vehicle range, and available charging station positions as input.
+
+The charging station positions are sorted before processing. The algorithm then scans the stations and selects the farthest station that is reachable from the current position.
+
+If no charging station is reachable and the destination is outside the available range, the algorithm reports that the journey is infeasible.
+
+The implementation returns the selected charging stops, the total number of stops, the total charging time, and the feasibility status.
+
+The implementation follows the greedy strategy and avoids exploring unnecessary combinations of charging stations.
