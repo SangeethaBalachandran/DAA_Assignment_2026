@@ -12,7 +12,7 @@
 
 ## Presentation
 
-- Video link: Pending
+- Video link: [Presentation](https://drive.google.com/file/d/10VfggUGEGYpmiTFiN9gBAKijLazjAprR/view?usp=drivesdk)
 - Duration: Pending (maximum 12:00)
 - Slides: [slides.pdf](slides.pdf)
 
