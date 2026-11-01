@@ -18,14 +18,36 @@
 
 ---
 
-## 1. Problem modelling
+## 1. Problem Modelling
 
-- Input:
-- Output:
-- Objective:
-- Constraints:
-- Problem class (decision / optimisation / enumeration):
-- Classical problem it maps to:
+- **Input:**
+  - A sequence of five relations: R1, R2, R3, R4 and R5.
+  - Dimension array: `p = [40, 20, 30, 10, 30, 15]`.
+  - Each relation Ri has dimensions `(p[i-1], p[i])`.
+
+- **Output:**
+  - The optimal parenthesisation (join order) of the five relations.
+  - The minimum total join cost.
+
+- **Objective:**
+  - Minimise the total computational cost of joining all five relations.
+  - The cost of joining two intermediate subchains `Ri...Rk` and `R(k+1)...Rj` is:
+    `p[i-1] * p[k] * p[j]`.
+
+- **Constraints:**
+  - All five relations must be joined.
+  - The original order of relations must be preserved.
+  - Only adjacent subchains can be combined.
+  - Join operations are associative, so different parenthesisations produce the same logical result.
+  - The total cost is the sum of the costs of all intermediate joins.
+
+- **Problem class (decision / optimisation / enumeration):**
+  - **Optimisation problem**, because the objective is to find the join order that produces the minimum total cost among all possible valid parenthesisations.
+
+- **Classical problem it maps to:**
+  - **Matrix Chain Multiplication (MCM)**.
+  - Similar to MCM, the problem involves finding the optimal parenthesisation of a sequence while minimising the total multiplication/join cost.
+  - It can be solved using Dynamic Programming by storing the minimum cost of every possible continuous subchain.
 
 ## 2. Data structure analysis
 
