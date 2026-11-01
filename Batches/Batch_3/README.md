@@ -309,13 +309,271 @@ Hence, the Dynamic Programming algorithm is correct.
 
 ## 7. Trace on the given instance
 
-Show every intermediate table, tree level, merge step or bound. State the final answer.
+We use Dynamic Programming to calculate the minimum join cost for every possible continuous subchain.
 
-## 8. Complexity analysis
+**Given input:**
 
-- Recurrence or counting argument:
-- Time (best / worst / typical):
-- Space:
+`p = [40, 20, 30, 10, 30, 15]`
+
+There are five relations:
+
+| Relation | Dimensions |
+|---|---|
+| R1 | 40 × 20 |
+| R2 | 20 × 30 |
+| R3 | 30 × 10 |
+| R4 | 10 × 30 |
+| R5 | 30 × 15 |
+
+### Step 1: Initialise the DP table
+
+Let `m[i][j]` represent the minimum cost of joining relations Ri through Rj.
+
+For a single relation, no join is required.
+
+`m[i][i] = 0`
+
+### Step 2: Calculate costs for subchains of length 2
+
+Using the formula:
+
+`Cost = p[i-1] × p[k] × p[j]`
+
+| Subchain | Calculation | Minimum Cost |
+|---|---|---:|
+| R1 JOIN R2 | 40 × 20 × 30 | 24,000 |
+| R2 JOIN R3 | 20 × 30 × 10 | 6,000 |
+| R3 JOIN R4 | 30 × 10 × 30 | 9,000 |
+| R4 JOIN R5 | 10 × 30 × 15 | 4,500 |
+
+### Step 3: Calculate costs for subchains of length 3
+
+**For R1 to R3:**
+
+| Splitting Position | Calculation | Total Cost |
+|---|---|---:|
+| R1 \| (R2 JOIN R3) | 0 + 6,000 + (40 × 20 × 10) | 14,000 |
+| (R1 JOIN R2) \| R3 | 24,000 + 0 + (40 × 30 × 10) | 36,000 |
+
+Minimum cost = **14,000**
+
+Optimal order: `R1 JOIN (R2 JOIN R3)`
+
+**For R2 to R4:**
+
+| Splitting Position | Calculation | Total Cost |
+|---|---|---:|
+| R2 \| (R3 JOIN R4) | 0 + 9,000 + (20 × 30 × 30) | 27,000 |
+| (R2 JOIN R3) \| R4 | 6,000 + 0 + (20 × 10 × 30) | 12,000 |
+
+Minimum cost = **12,000**
+
+Optimal order: `(R2 JOIN R3) JOIN R4`
+
+**For R3 to R5:**
+
+| Splitting Position | Calculation | Total Cost |
+|---|---|---:|
+| R3 \| (R4 JOIN R5) | 0 + 4,500 + (30 × 10 × 15) | 9,000 |
+| (R3 JOIN R4) \| R5 | 9,000 + 0 + (30 × 30 × 15) | 22,500 |
+
+Minimum cost = **9,000**
+
+Optimal order: `R3 JOIN (R4 JOIN R5)`
+
+### Step 4: Calculate costs for subchains of length 4
+
+**For R1 to R4:**
+
+| Splitting Position | Calculation | Total Cost |
+|---|---|---:|
+| R1 \| (R2...R4) | 0 + 12,000 + (40 × 20 × 30) | 36,000 |
+| (R1...R2) \| (R3...R4) | 24,000 + 9,000 + (40 × 30 × 30) | 69,000 |
+| (R1...R3) \| R4 | 14,000 + 0 + (40 × 10 × 30) | 26,000 |
+
+Minimum cost = **26,000**
+
+Optimal order: `(R1 JOIN (R2 JOIN R3)) JOIN R4`
+
+**For R2 to R5:**
+
+| Splitting Position | Calculation | Total Cost |
+|---|---|---:|
+| R2 \| (R3...R5) | 0 + 9,000 + (20 × 30 × 15) | 18,000 |
+| (R2...R3) \| (R4...R5) | 6,000 + 4,500 + (20 × 10 × 15) | 13,500 |
+| (R2...R4) \| R5 | 12,000 + 0 + (20 × 30 × 15) | 21,000 |
+
+Minimum cost = **13,500**
+
+Optimal order: `(R2 JOIN R3) JOIN (R4 JOIN R5)`
+
+### Step 5: Calculate the cost for the complete chain
+
+For R1 to R5, all four possible splitting positions are evaluated.
+
+| Splitting Position | Calculation | Total Cost |
+|---|---|---:|
+| R1 \| (R2...R5) | 0 + 13,500 + (40 × 20 × 15) | 25,500 |
+| (R1...R2) \| (R3...R5) | 24,000 + 9,000 + (40 × 30 × 15) | 51,000 |
+| (R1...R3) \| (R4...R5) | 14,000 + 4,500 + (40 × 10 × 15) | 24,500 |
+| (R1...R4) \| R5 | 26,000 + 0 + (40 × 30 × 15) | 44,000 |
+
+Minimum cost = **24,500**
+
+Optimal splitting position: Between R3 and R4.
+
+### Step 6: Final DP Cost Table
+
+| DP State | R1 | R2 | R3 | R4 | R5 |
+|---|---:|---:|---:|---:|---:|
+| R1 | 0 | 24,000 | 14,000 | 26,000 | 24,500 |
+| R2 | - | 0 | 6,000 | 12,000 | 13,500 |
+| R3 | - | - | 0 | 9,000 | 9,000 |
+| R4 | - | - | - | 0 | 4,500 |
+| R5 | - | - | - | - | 0 |
+
+### Step 7: Reconstruct the optimal join order
+
+From the split table:
+
+1. Join R2 and R3 first: Cost = 6,000.
+2. Join R1 with the result of R2 JOIN R3: Cost = 8,000.
+3. Join R4 and R5: Cost = 4,500.
+4. Join the two resulting intermediate relations: Cost = 6,000.
+
+**Final Optimal Join Order:**
+
+`((R1 JOIN (R2 JOIN R3)) JOIN (R4 JOIN R5))`
+
+**Total Minimum Join Cost:**
+
+`6,000 + 8,000 + 4,500 + 6,000 = 24,500`
+
+Therefore, the minimum join cost is **24,500**.
+
+## 8. Complexity Analysis
+
+### 8.1 Time Complexity
+
+The Dynamic Programming algorithm calculates the minimum cost for every possible continuous subchain.
+
+Let n represent the number of relations.
+
+The algorithm uses three nested loops:
+
+1. The outer loop considers subchain lengths from 2 to n.
+2. The second loop selects the starting position of each subchain.
+3. The innermost loop examines every possible splitting position.
+
+The total number of split evaluations is:
+
+`Σ (n - L + 1)(L - 1)`, for L = 2 to n.
+
+This summation grows proportionally to n³.
+
+Therefore, the time complexity is:
+
+**O(n³)**
+
+### 8.2 Space Complexity
+
+The algorithm uses two n × n tables:
+
+- Cost table `m[n][n]` stores minimum join costs.
+- Split table `s[n][n]` stores optimal splitting positions.
+
+Each table requires O(n²) space.
+
+Therefore, the total space complexity is:
+
+**O(n²)**
+
+### 8.3 Best, Worst and Practical Cases
+
+| Case | Time Complexity | Explanation |
+|---|---|---|
+| Best Case | O(n³) | Every possible splitting position is still evaluated, even if a good solution is found early. |
+| Average Case | O(n³) | The number of subchains and splitting positions depends on n. |
+| Worst Case | O(n³) | All possible splitting positions are evaluated for every subchain. |
+
+**Practical Behaviour:**
+
+- For a small number of relations, Dynamic Programming computes the optimal join order efficiently.
+- As the number of relations increases, the number of DP states and split evaluations increases.
+- The algorithm is much more efficient than enumerating all Catalan-number parenthesisations.
+- For larger join graphs, the chain-based DP approach must be extended, and its complexity can increase significantly.
+
+**Conclusion:**
+
+Dynamic Programming solves the chain-based join ordering problem in O(n³) time and O(n²) space. Its polynomial complexity makes it more scalable than exhaustive enumeration for this scenario.
+
+## 9. Worst-case input
+
+To demonstrate the worst-case behaviour of the Dynamic Programming algorithm, consider an input where all relation dimensions are equal.
+
+**Constructed Input:**
+
+`p = [10, 10, 10, 10, 10, 10]`
+
+This represents five relations, each having dimensions 10 × 10.
+
+### 9.1 Behaviour of the Algorithm
+
+For every possible join:
+
+`Join Cost = 10 × 10 × 10 = 1,000`
+
+All possible splitting positions produce the same total cost for a given subchain length.
+
+For example:
+
+**Subchains of length 2:**
+
+| Join | Cost |
+|---|---:|
+| R1 JOIN R2 | 1,000 |
+| R2 JOIN R3 | 1,000 |
+| R3 JOIN R4 | 1,000 |
+| R4 JOIN R5 | 1,000 |
+
+**Subchains of length 3:**
+
+Every possible parenthesisation requires two joins.
+
+Minimum cost = 2 × 1,000 = **2,000**
+
+**Subchains of length 4:**
+
+Every possible parenthesisation requires three joins.
+
+Minimum cost = 3 × 1,000 = **3,000**
+
+**Complete chain of five relations:**
+
+Every possible parenthesisation requires four joins.
+
+Minimum cost = 4 × 1,000 = **4,000**
+
+### 9.2 Final DP Cost Table
+
+| DP State | R1 | R2 | R3 | R4 | R5 |
+|---|---:|---:|---:|---:|---:|
+| R1 | 0 | 1,000 | 2,000 | 3,000 | 4,000 |
+| R2 | - | 0 | 1,000 | 2,000 | 3,000 |
+| R3 | - | - | 0 | 1,000 | 2,000 |
+| R4 | - | - | - | 0 | 1,000 |
+| R5 | - | - | - | - | 0 |
+
+### 9.3 Why This Represents a Worst-Case Behaviour
+
+- Every possible splitting position produces the same minimum cost.
+- The algorithm cannot stop early after finding a better split because all splits must be evaluated to establish the minimum.
+- It performs the complete set of split evaluations.
+- Therefore, the number of operations remains proportional to n³.
+
+**Conclusion:**
+
+The equal-dimension input creates multiple equally optimal parenthesisations. Although the optimal cost is easy to determine mathematically, the Dynamic Programming algorithm still evaluates all possible splitting positions. Hence, it demonstrates the O(n³) worst-case time complexity and O(n²) space complexity.
 
 ## 9. Worst-case input
 
