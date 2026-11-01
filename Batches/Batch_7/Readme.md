@@ -8,7 +8,7 @@
 - Member 3: Rizvin A - 24I348 - GitHub: `rizvin1980-ai`
 - Member 4: Thanya K - 24I369 - GitHub: `24i369`
 
-**Presentation video:** [PASTE THE GOOGLE DRIVE OR YOUTUBE UNLISTED LINK HERE]
+**Presentation video:** (https://docs.google.com/presentation/d/1HiANg0gUzTlDgeMpOIkd813eonEaDn7Y/edit?usp=sharing&ouid=105269251308143861482&rtpof=true&sd=true)
 
 **Chosen technique:** Backtracking with forward checking and most-constrained-first ordering.
 
@@ -531,7 +531,7 @@ The analysis sheet is included as:
 
 ## 15. Presentation and conclusion
 
-**Presentation video:** [PASTE THE GOOGLE DRIVE OR YOUTUBE UNLISTED LINK HERE]
+**Presentation video:** (https://docs.google.com/presentation/d/1HiANg0gUzTlDgeMpOIkd813eonEaDn7Y/edit?usp=sharing&ouid=105269251308143861482&rtpof=true&sd=true)
 
 The presentation should explain the problem, selected design technique, algorithm, implementation, experimental results, real-world application and conclusion.
 
