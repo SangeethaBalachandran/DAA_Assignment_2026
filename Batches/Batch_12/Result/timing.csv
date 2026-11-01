@@ -1,0 +1,6 @@
+n,merge_sort_median_seconds,brute_force_median_seconds,inversion_count,trials,input
+100,0.000070148,0.000130895,2151,5,deterministic_random_permutation
+500,0.000479754,0.003889095,65826,5,deterministic_random_permutation
+1000,0.001086131,0.016840278,246619,5,deterministic_random_permutation
+2000,0.002326943,0.067572508,972436,5,deterministic_random_permutation
+5000,0.006626749,0.425294680,6132879,5,deterministic_random_permutation
