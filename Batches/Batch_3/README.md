@@ -507,27 +507,50 @@ Therefore, the total space complexity is:
 
 Dynamic Programming solves the chain-based join ordering problem in O(n³) time and O(n²) space. Its polynomial complexity makes it more scalable than exhaustive enumeration for this scenario.
 
-## 9. Tie-Heavy Input Analysis
+## 9. Worst-Case Input
 
-The equal-dimension input creates multiple equally optimal parenthesisations. However, the number of split evaluations depends on the number of relations, not their dimension values.
+### 9.1 Constructed Input
 
-Therefore, the algorithm performs O(n³) time and uses O(n²) space regardless of whether the dimensions are equal or different.
+Consider a chain of `n` relations where all dimensions are equal:
 
-**Constructed Input:**
+`p = [10, 10, 10, ..., 10]`
+
+For five relations:
 
 `p = [10, 10, 10, 10, 10, 10]`
 
-This represents five relations, each having dimensions 10 × 10.
+This input creates multiple equally optimal parenthesisations. However, the worst-case running time of the algorithm is determined by the number of relations and the number of possible split positions, not by the dimension values.
 
-### 9.1 Behaviour of the Algorithm
+### 9.2 Worst-Case Behaviour of the Algorithm
 
-For every possible join:
+The Dynamic Programming algorithm considers every possible continuous subchain and evaluates every valid splitting position.
 
-`Join Cost = 10 × 10 × 10 = 1,000`
+For a chain containing `n` relations:
 
-All possible splitting positions produce the same total cost for a given subchain length.
+- Number of DP states: `n(n+1)/2 = O(n²)`.
+- Each state may examine up to `n-1` splitting positions.
+- Total split evaluations:
 
-For example:
+\[
+\sum_{l=2}^{n}(n-l+1)(l-1)
+=\frac{n(n-1)(n+1)}{6}
+\]
+
+Therefore, the algorithm performs **O(n³) time** and requires **O(n²) space**.
+
+For five relations, the number of split evaluations is:
+
+\[
+\frac{5(5-1)(5+1)}{6}=20
+\]
+
+The algorithm evaluates all 20 possible split positions, even when multiple splits produce the same minimum cost.
+
+### 9.3 DP Cost Table for the Constructed Input
+
+For equal dimensions, every individual join costs:
+
+`10 × 10 × 10 = 1,000`
 
 **Subchains of length 2:**
 
@@ -540,23 +563,21 @@ For example:
 
 **Subchains of length 3:**
 
-Every possible parenthesisation requires two joins.
+Every parenthesisation requires two joins.
 
 Minimum cost = 2 × 1,000 = **2,000**
 
 **Subchains of length 4:**
 
-Every possible parenthesisation requires three joins.
+Every parenthesisation requires three joins.
 
 Minimum cost = 3 × 1,000 = **3,000**
 
 **Complete chain of five relations:**
 
-Every possible parenthesisation requires four joins.
+Every parenthesisation requires four joins.
 
 Minimum cost = 4 × 1,000 = **4,000**
-
-### 9.2 Final DP Cost Table
 
 | DP State | R1 | R2 | R3 | R4 | R5 |
 |---|---:|---:|---:|---:|---:|
@@ -566,16 +587,15 @@ Minimum cost = 4 × 1,000 = **4,000**
 | R4 | - | - | - | 0 | 1,000 |
 | R5 | - | - | - | - | 0 |
 
-### 9.3 Why This Represents a Tie-Heavy Case
+### 9.4 Worst-Case Complexity
 
-- Every possible splitting position produces the same minimum cost.
-- Multiple parenthesisations are equally optimal.
-- The algorithm must evaluate all possible splitting positions to determine the minimum.
-- The number of split evaluations depends on the number of relations, not their dimension values.
+- **Time Complexity:** O(n³), because every possible split position is evaluated for every subchain.
+- **Space Complexity:** O(n²), because the cost and split tables store results for all continuous subchains.
+- **Worst-case behaviour:** The algorithm performs all possible split evaluations without skipping any based on the input dimensions.
 
 **Conclusion:**
 
-The equal-dimension input demonstrates a tie-heavy case with multiple equally optimal parenthesisations. However, it does not increase the algorithm's running time. The algorithm retains O(n³) time complexity and O(n²) space complexity.
+The constructed equal-dimension input demonstrates a tie-heavy case in which multiple parenthesisations have the same optimal cost. The algorithm still evaluates all possible split positions. Its worst-case time complexity remains O(n³), and its space complexity remains O(n²). The number of operations is determined by the number of relations, not by whether their dimensions are equal or different.
 
 ## 10. Empirical Analysis
 
@@ -604,6 +624,13 @@ The following table shows the median execution times and total join costs measur
 - Greedy executes faster than Dynamic Programming for all tested input sizes.
 - Dynamic Programming produces a lower join cost than Greedy for all five tested inputs.
 - The performance difference demonstrates the trade-off between execution speed and optimality.
+
+### Comparison with Theoretical Complexity
+
+- Dynamic Programming has a theoretical time complexity of O(n³).
+- Its measured execution time increases as the number of relations increases.
+- The observed growth is broadly consistent with the cubic complexity, although small input sizes and system timing variations affect the measurements.
+- The Greedy implementation is faster in these experiments, but it does not guarantee the optimal join cost.
 
 ### Performance Plot
 
