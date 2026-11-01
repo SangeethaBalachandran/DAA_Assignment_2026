@@ -9,7 +9,7 @@
 - Member 4: Thanya K - 24I369 - GitHub: `24i369`
 
 **Presentation video:** (https://docs.google.com/presentation/d/1HiANg0gUzTlDgeMpOIkd813eonEaDn7Y/edit?usp=sharing&ouid=105269251308143861482&rtpof=true&sd=true)
-
+**NOTE:** DOWNLOAD THIS AND LISTEN IN POWERPOINT
 **Chosen technique:** Backtracking with forward checking and most-constrained-first ordering.
 
 **Rejected techniques:** Greedy, Dynamic Programming, Divide and Conquer, Branch and Bound.
