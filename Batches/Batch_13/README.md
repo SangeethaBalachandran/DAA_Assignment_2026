@@ -391,11 +391,11 @@ Overall, the project demonstrates that the Greedy Method provides an efficient a
 
 | Member | Contribution |
 |---|---|
-| Member 1 | Problem definition, input-output specification, constraints, assumptions, and introduction. |
-| Member 2 | Greedy algorithm design, algorithm steps, pseudocode, and Python implementation. |
-| Member 3 | Correctness proof, exchange argument, induction, and complexity analysis. |
-| Member 4 | Alternative algorithm implementation, input generation, experimental testing, and performance evaluation. |
-| Member 5 | README integration, experimental results presentation, extensions, real-world applications, conclusion, and final presentation coordination. |
+| 24I311 | Problem definition, input-output specification, constraints, assumptions, and introduction. |
+| 24I324 | Greedy algorithm design, algorithm steps, pseudocode, and Python implementation. |
+| 24I304 | Correctness proof, exchange argument, induction, and complexity analysis. |
+| 24I322 | Alternative algorithm implementation, input generation, experimental testing, and performance evaluation. |
+| 24I339 | README integration, experimental results presentation, extensions, real-world applications, conclusion, and final presentation coordination. |
 
 ### 8.2 Presentation
 
