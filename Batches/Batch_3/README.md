@@ -49,15 +49,17 @@
   - Similar to MCM, the problem involves finding the optimal parenthesisation of a sequence while minimising the total multiplication/join cost.
   - It can be solved using Dynamic Programming by storing the minimum cost of every possible continuous subchain.
 
-## 2. Data structure analysis
+## 2. Data Structure Analysis
 
 | Data structure | Key operation(s) and cost | Space | Behaviour at the scale in the scenario |
 |---|---|---|---|
-| Chosen: | | | |
-| Alternative 1: | | | |
-| Alternative 2: | | | |
+| Chosen: Two-Dimensional Array | Access and update DP entries: O(1). Used to store and retrieve minimum costs and optimal split positions. | O(n²) | Efficiently stores all continuous subchain costs. Suitable for the given 5-table problem and moderate-sized join chains. |
+| Alternative 1: Hash Map | Search, insertion and update: Average O(1), using subchain indices as keys. | O(n²) for all possible subchains | Supports memoisation, but introduces hashing overhead and is less convenient for displaying a complete DP table. |
+| Alternative 2: Adjacency List | Traverse neighbouring relations: O(degree of vertex). | O(V + E) | Suitable for representing join relationships in arbitrary join graphs, but unnecessary for the given fixed chain of five relations. |
 
 **Why the chosen structure wins:**
+
+A two-dimensional array is the most suitable data structure because our problem requires storing the minimum join cost for every possible continuous subchain. It provides constant-time access and updates, supports bottom-up Dynamic Programming, and allows easy reconstruction of the optimal join order using a separate split table. It is simpler and more appropriate for the given chain-based problem than a hash map or adjacency list.
 
 ## 3. Design technique identification
 
