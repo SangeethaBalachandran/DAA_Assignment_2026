@@ -19,7 +19,7 @@ def min_charging_stops(chargers, destination, range_km):
             farthest = points[i]
             i += 1
         if farthest == current:
-            return None  # infeasible: no reachable charger
+            return None  
         stops.append(farthest)
         current = farthest
     return stops
