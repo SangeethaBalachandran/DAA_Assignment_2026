@@ -66,7 +66,7 @@
 
 ## 6. Proof of correctness
 **Proof that pruning never discards an optimal solution:** 
-The lower bound for any node is computed by reducing rows and columns (subtracting the minimum from each). This sum of minimums represents the absolute minimum cost to complete the remaining assignments. Because costs are $\ge 0$, any full assignment derived from this node will have a cost $C \ge \text{lower\_bound}$. If $\text{lower\_bound} \ge \text{GlobalMin}$ (the best complete assignment found so far), then $C \ge \text{GlobalMin}$. Therefore, no better solution can exist down this branch, and it is mathematically safe to prune it.
+The lower bound for any node is computed by reducing rows and columns (subtracting the minimum from each). This sum of minimums represents the absolute minimum cost to complete the remaining assignments. Because costs are $\ge 0$, any full assignment derived from this node will have a cost $C \ge \text{LowerBound}$. If $\text{LowerBound} \ge \text{GlobalMin}$ (the best complete assignment found so far), then $C \ge \text{GlobalMin}$. Therefore, no better solution can exist down this branch, and it is mathematically safe to prune it.
 
 ## 7. Trace on the given instance
 **Matrix:**
