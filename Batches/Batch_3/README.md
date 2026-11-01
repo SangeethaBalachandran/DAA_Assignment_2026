@@ -8,7 +8,7 @@
 | 24i307 | Asraf M | asrafit | Design technique identification | Technique selection, rejection of other four techniques, Q3, alternative implementation |
 | 24i330 | Mazin J | 24i330 | Algorithm and correctness | Main algorithm, pseudocode, correctness proof, main implementation |
 | 24i363 | Stalin K | stalinkaruna77-eng | Trace and complexity analysis | Q2, complete trace, complexity analysis, worst-case input |
-| 24i368 | Tarun Kumar KPS | Username pending | Extended scenario and empirical analysis | Q4, Q5, changed requirement, benchmarking and timing results |
+| 24i368 | Tarun Kumar KPS | tk282006-spec | Extended scenario and empirical analysis | Section 10, Section 11, Q4, Q5, Section 13, benchmarking and timing results |
 
 ## Presentation
 
@@ -507,9 +507,11 @@ Therefore, the total space complexity is:
 
 Dynamic Programming solves the chain-based join ordering problem in O(n³) time and O(n²) space. Its polynomial complexity makes it more scalable than exhaustive enumeration for this scenario.
 
-## 9. Worst-case input
+## 9. Tie-Heavy Input Analysis
 
-To demonstrate the worst-case behaviour of the Dynamic Programming algorithm, consider an input where all relation dimensions are equal.
+The equal-dimension input creates multiple equally optimal parenthesisations. However, the number of split evaluations depends on the number of relations, not their dimension values.
+
+Therefore, the algorithm performs O(n³) time and uses O(n²) space regardless of whether the dimensions are equal or different.
 
 **Constructed Input:**
 
@@ -564,33 +566,80 @@ Minimum cost = 4 × 1,000 = **4,000**
 | R4 | - | - | - | 0 | 1,000 |
 | R5 | - | - | - | - | 0 |
 
-### 9.3 Why This Represents a Worst-Case Behaviour
+### 9.3 Why This Represents a Tie-Heavy Case
 
 - Every possible splitting position produces the same minimum cost.
-- The algorithm cannot stop early after finding a better split because all splits must be evaluated to establish the minimum.
-- It performs the complete set of split evaluations.
-- Therefore, the number of operations remains proportional to n³.
+- Multiple parenthesisations are equally optimal.
+- The algorithm must evaluate all possible splitting positions to determine the minimum.
+- The number of split evaluations depends on the number of relations, not their dimension values.
 
 **Conclusion:**
 
-The equal-dimension input creates multiple equally optimal parenthesisations. Although the optimal cost is easy to determine mathematically, the Dynamic Programming algorithm still evaluates all possible splitting positions. Hence, it demonstrates the O(n³) worst-case time complexity and O(n²) space complexity.
+The equal-dimension input demonstrates a tie-heavy case with multiple equally optimal parenthesisations. However, it does not increase the algorithm's running time. The algorithm retains O(n³) time complexity and O(n²) space complexity.
 
-## 9. Worst-case input
+## 10. Empirical Analysis
 
-The input you constructed, and how your algorithm behaves on it.
+### Experimental Setup
 
-## 10. Implementation and empirical analysis
+- Both Dynamic Programming and Greedy algorithms were tested.
+- Input sizes were varied from 5 to 25 relations.
+- Each algorithm was executed 5 times for every input size.
+- Median execution time was used to reduce timing variations.
 
-- Language and how to run: See [code/RUN.md](code/RUN.md)
-- Input sizes used (at least five):
-- Plot: ![timing plot](results/timing_plot.png)
-- Does the measured growth match Section 8? Explain any deviation.
-- Comparison with the rejected alternative:
+### Benchmark Results
 
-## 11. Changed requirement
+The following table shows the median execution times and total join costs measured over 5 repetitions for each input size.
 
-Answer the last question of your scenario: how the solution changes, whether the technique still holds, and the new complexity.
+| Number of Relations | DP Time (seconds) | Greedy Time (seconds) | DP Cost | Greedy Cost |
+|---:|---:|---:|---:|---:|
+| 5 | 0.0000198 | 0.0000099 | 375,282 | 959,970 |
+| 10 | 0.0000954 | 0.0000243 | 293,692 | 747,738 |
+| 15 | 0.0002899 | 0.0000495 | 540,264 | 788,322 |
+| 20 | 0.0009720 | 0.0001235 | 527,400 | 2,174,615 |
+| 25 | 0.0018837 | 0.0001787 | 895,362 | 1,365,253 |
 
+### Observations
+
+- Both algorithms show increasing execution time as the number of relations increases.
+- Greedy executes faster than Dynamic Programming for all tested input sizes.
+- Dynamic Programming produces a lower join cost than Greedy for all five tested inputs.
+- The performance difference demonstrates the trade-off between execution speed and optimality.
+
+### Performance Plot
+
+The execution-time comparison is represented in `results/timing_plot.png`.
+
+---
+
+## 11. Changed Requirement
+
+### Requirement: Handling Arbitrary Join Graphs
+
+The original problem considers relations arranged in a linear chain. Consider a changed requirement where relations can form an arbitrary join graph.
+
+- A linear-chain DP solution cannot directly handle every possible join relationship.
+- Subset Dynamic Programming can represent groups of relations using bitmasks.
+- Each subset stores the minimum cost of producing that group of relations.
+- Valid partitions are evaluated to determine the minimum-cost join plan.
+- Only connected subsets and partitions with valid join predicates should be considered when constructing join plans.
+
+### Modified Approach
+
+Let S represent a subset of relations.
+
+- DP[S] stores the minimum cost of joining all relations in subset S.
+- Divide S into two non-empty valid subsets A and B.
+- Calculate DP[A] + DP[B] + JoinCost(A, B).
+- Choose the partition with the minimum total cost.
+
+### Complexity
+
+- Time Complexity: O(3ⁿ)
+- Space Complexity: O(2ⁿ)
+
+The subset-based approach supports arbitrary join graphs but becomes computationally expensive as the number of relations increases.
+
+---
 ## 12. Remaining Scenario Questions
 
 ### Q1. Count the possible join orders for 5 tables and 15 tables. Why is trying them all impractical?
@@ -768,9 +817,53 @@ The Greedy approach produces a cost that is approximately 22.45% higher than the
 
 The Greedy approach does not guarantee the globally optimal join order because choosing the cheapest immediate adjacent pair may lead to expensive future joins. Dynamic Programming is better because it evaluates all possible splitting positions and guarantees the minimum total join cost for the given chain.
 
-## 13. Real-world reference
+### Q4. How can Dynamic Programming be extended to handle arbitrary join graphs instead of a linear chain?
 
-One real system, library or published paper that uses this approach, and how it differs from your version. Include a link.
+**Answer:**
+
+- Represent each subset of relations using a bitmask.
+- Maintain a DP table where DP[S] stores the minimum cost of joining subset S.
+- Enumerate valid partitions of S into two smaller subsets.
+- Select the partition with the minimum combined join cost.
+
+The subset DP approach has O(3ⁿ) time complexity and O(2ⁿ) space complexity under a constant-time split-cost model.
+
+### Q5. Can Branch and Bound replace Genetic Query Optimisation for a large number of relations?
+
+**Answer:**
+
+- Branch and Bound explores possible join orders while maintaining the best complete solution.
+- It prunes partial solutions whose lower bound cannot improve the current best solution.
+- It can find an optimal solution if the search is completed with valid bounds.
+- Its worst-case time complexity remains exponential, so it cannot always replace Genetic Query Optimisation for large queries.
+
+Branch and Bound is useful when effective bounds allow substantial pruning, whereas Genetic Query Optimisation provides a heuristic search strategy for reducing planning time.
+
+---
+
+## 13. Real-World Application
+
+### PostgreSQL Genetic Query Optimiser (GEQO)
+
+PostgreSQL uses a Genetic Query Optimiser (GEQO) to plan queries involving a large number of relations.
+
+- GEQO uses heuristic search to reduce query-planning time.
+- It is designed for complex queries involving many relations.
+- It may produce plans that are not globally optimal.
+- The default `geqo_threshold` is 12 relations.
+
+### Connection to Our Problem
+
+- Join ordering is an important part of database query optimisation.
+- Dynamic Programming finds optimal join orders for manageable problem sizes.
+- Exhaustive search becomes expensive as the number of relations increases.
+- PostgreSQL uses GEQO to manage planning time for larger queries.
+
+**Reference:**
+
+PostgreSQL Official Documentation – Genetic Query Optimizer
+
+https://www.postgresql.org/docs/current/runtime-config-query.html#GUC-GEQO-THRESHOLD
 
 ---
 
