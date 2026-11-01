@@ -5,10 +5,10 @@
 | Roll No. | Name | GitHub username | Part presented | Contribution (code, report sections) |
 | --- | --- | --- | --- | --- |
 | 24I302 | Abirami P C | abikomberi25 | Slides 1–5, 9–11 | `MainSolution.java`, `EdfBaseline.java`, Report Sec 1, 2-a, 7, 12-a |
-| 24I308 | Bharaghave Shi C G | FILL_ME_IN | Slides 6–7 | `RejectedAlternative.java`, `Verify.java`, Report Sec 3, 4 |
-| 24I314 | Dhekshika D | FILL_ME_IN | Slides 4–5, 8 | `SlotFinders.java`, `Q4Benchmark.java`, Report Sec 2-b, 5, 12-b |
-| 24I358 | Sowmya P Nagarajan | FILL_ME_IN | Slides 12–15 | `Benchmark.java`, `GenerateInputs.java`, Report Sec 6, 8, 9 |
-| 24I374 | Vinothini | FILL_ME_IN | Slides 16–20 | `ChangedRequirement.java`, `plot_timing.py`, Report Sec 10, 11, 13 |
+| 24I308 | Bharaghave Shi C G | Vinothini1106 | Slides 6–7 | `RejectedAlternative.java`, `Verify.java`, Report Sec 3, 4 |
+| 24I314 | Dhekshika D | Vinothini1106 | Slides 4–5, 8 | `SlotFinders.java`, `Q4Benchmark.java`, Report Sec 2-b, 5, 12-b |
+| 24I358 | Sowmya P Nagarajan | Vinothini1106 | Slides 12–15 | `Benchmark.java`, `GenerateInputs.java`, Report Sec 6, 8, 9 |
+| 24I374 | Vinothini | Vinothini1106 | Slides 16–20 | `ChangedRequirement.java`, `plot_timing.py`, Report Sec 10, 11, 13 |
 
 ## Presentation
 
