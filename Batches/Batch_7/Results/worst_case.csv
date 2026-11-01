@@ -1,0 +1,7 @@
+chromatic_k,n,slots_asked,ordering,nodes,result,time_ms
+4,11,3,mrv,26,infeasible-proved,0.1
+4,11,3,input,57,infeasible-proved,0.1
+5,23,4,mrv,895,infeasible-proved,3.9
+5,23,4,input,49388,infeasible-proved,60.1
+6,47,5,mrv,448614,infeasible-proved,3840.3
+6,47,5,input,3000001,aborted,5272.3
