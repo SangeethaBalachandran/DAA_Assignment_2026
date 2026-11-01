@@ -79,15 +79,184 @@ Give concrete evidence for each: a counterexample, a subproblem count, a state-s
 
 ## 5. Algorithm
 
-Pseudocode, with the state definition / recurrence / selection rule / pruning or bounding rule as applicable.
+### 5.1 Selected Algorithm: Dynamic Programming
+
+We use Dynamic Programming based on the Matrix Chain Multiplication approach to find the minimum-cost join order.
+
+**State Definition:**
+
+Let `m[i][j]` represent the minimum cost of joining relations Ri through Rj.
+
+Let `s[i][j]` represent the optimal splitting position for the subchain Ri through Rj.
+
+**Base Case:**
+
+A single relation requires no join operation.
+
+m[i][i] = 0
+
+**Recurrence Relation:**
+
+For every possible splitting position k between i and j:
+
+m[i][j] = min { m[i][k] + m[k+1][j] + p[i-1] × p[k] × p[j] }
+
+where i <= k < j.
+
+**Algorithm Steps:**
+
+1. Initialise a two-dimensional cost table `m` with zeros.
+2. Initialise a split table `s` to store optimal splitting positions.
+3. Consider subchains of increasing length, starting from length 2.
+4. For each subchain Ri through Rj, initialise its minimum cost to infinity.
+5. Try every possible splitting position k between i and j.
+6. Calculate the total cost using the recurrence relation.
+7. Update the minimum cost and splitting position whenever a lower cost is found.
+8. After filling the table, reconstruct the optimal join order using the split table.
+9. Return the minimum cost and optimal parenthesisation.
+
+### 5.2 Pseudocode
 
 ```text
+MATRIX_CHAIN_JOIN(p, n):
 
+    Create cost table m[n][n]
+    Create split table s[n][n]
+
+    For i = 1 to n:
+        m[i][i] = 0
+
+    For length = 2 to n:
+
+        For i = 1 to n - length + 1:
+
+            j = i + length - 1
+            m[i][j] = INFINITY
+
+            For k = i to j - 1:
+
+                current_cost =
+                    m[i][k] +
+                    m[k+1][j] +
+                    p[i-1] * p[k] * p[j]
+
+                If current_cost < m[i][j]:
+
+                    m[i][j] = current_cost
+                    s[i][j] = k
+
+    Return m[1][n], s
+
+
+CONSTRUCT_ORDER(s, i, j):
+
+    If i == j:
+        Return Ri
+
+    k = s[i][j]
+
+    left = CONSTRUCT_ORDER(s, i, k)
+    right = CONSTRUCT_ORDER(s, k+1, j)
+
+    Return (left JOIN right)
 ```
+### 5.3 Optimal Join Order
 
-## 6. Proof of correctness
+For the given input:
 
-Exchange argument, induction, loop invariant, or proof that pruning never discards an optimal solution.
+`p = [40, 20, 30, 10, 30, 15]`
+
+The Dynamic Programming algorithm produces:
+
+- **Minimum join cost:** 24,500
+- **Optimal join order:** `((R1 JOIN (R2 JOIN R3)) JOIN (R4 JOIN R5))`
+
+**Individual Join Costs:**
+
+| Join Operation | Cost |
+|---|---:|
+| R2 JOIN R3 | 6,000 |
+| R1 JOIN (R2 JOIN R3) | 8,000 |
+| R4 JOIN R5 | 4,500 |
+| Final join | 6,000 |
+| **Total** | **24,500** |
+
+Therefore, the minimum total join cost is **24,500**.
+
+## 6. Proof of Correctness
+
+We prove that the Dynamic Programming algorithm always finds the minimum-cost join order.
+
+### 6.1 Base Case
+
+For a subchain containing only one relation Ri, no join operation is required.
+
+Therefore:
+
+m[i][i] = 0
+
+This is the correct minimum cost for a single relation.
+
+### 6.2 Optimal Substructure
+
+Consider a subchain of relations Ri through Rj.
+
+In any valid parenthesisation, the final join must divide the subchain at some position k, where i <= k < j.
+
+This creates two smaller subchains:
+
+- Left subchain: Ri through Rk.
+- Right subchain: R(k+1) through Rj.
+
+The total cost is:
+
+m[i][k] + m[k+1][j] + p[i-1] * p[k] * p[j]
+
+Suppose the left or right subchain does not have its minimum possible cost.
+
+Replacing that subchain with its optimal parenthesisation would reduce the total cost without changing the final join dimensions.
+
+This would contradict the assumption that the original parenthesisation was optimal.
+
+Therefore, both subchains must also have optimal parenthesisations.
+
+This establishes the **optimal substructure property**.
+
+### 6.3 Inductive Proof
+
+**Base Case:**
+
+The algorithm correctly computes the minimum cost for a single relation because m[i][i] = 0.
+
+**Inductive Hypothesis:**
+
+Assume that the algorithm correctly computes the minimum join cost for all subchains of length smaller than L.
+
+**Inductive Step:**
+
+Consider a subchain of length L, from Ri through Rj.
+
+The algorithm examines every possible splitting position k between i and j.
+
+For each split, it combines:
+
+- The optimal cost of the left subchain.
+- The optimal cost of the right subchain.
+- The cost of performing the final join.
+
+By the inductive hypothesis, the costs of both smaller subchains are optimal.
+
+Since every possible final split is examined, the algorithm selects the minimum total cost among all valid parenthesisations.
+
+Therefore, it correctly computes the optimal cost for the subchain of length L.
+
+By mathematical induction, the algorithm computes the minimum join cost for every subchain, including the complete chain.
+
+### 6.4 Conclusion
+
+The algorithm considers every possible final split and uses the optimal solutions of smaller subchains. Therefore, it always produces the minimum-cost join order.
+
+Hence, the Dynamic Programming algorithm is correct.
 
 ## 7. Trace on the given instance
 
