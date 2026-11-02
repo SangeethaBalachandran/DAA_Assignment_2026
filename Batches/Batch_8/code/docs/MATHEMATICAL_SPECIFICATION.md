@@ -1,5 +1,5 @@
 # Mathematical Specification Document
-## Industrial IoT Telemetry Compression & Network Optimization Platform
+## Industrial IoT Telemetry Compression & Network Optimization Platform.
 
 - **Project:** Industrial Edge Gateway Telemetry Compression System
 - **Author:** Senior Algorithm Engineer & Systems Architect
