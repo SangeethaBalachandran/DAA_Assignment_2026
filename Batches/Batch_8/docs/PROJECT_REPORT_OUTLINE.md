@@ -1,5 +1,5 @@
 # Academic Project Report Outline
-## Industrial IoT Telemetry Compression & Network Optimization Platform
+## Industrial IoT Telemetry Compression & Network Optimization Platform.
 
 - **Institution:** Department of Computer Science & Engineering
 - **Subject:** Design and Analysis of Algorithms (DAA) / Cyber-Physical Systems
