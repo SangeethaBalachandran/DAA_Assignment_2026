@@ -1,6 +1,6 @@
 # Batch_8 – Sensor Telemetry Compression using Huffman Coding
 
-## DAA Assignment 2026
+Repository for the DAA Assignment submission of **Batch_8**.
 
 **Course:** 23I501 – Design and Analysis of Algorithms (DAA)  
 **Institution:** PSG College of Technology  
@@ -26,7 +26,7 @@ The given sensor frequencies are:
 | FAULT | 2 |
 | RESET | 1 |
 
-The goal is to reduce bandwidth usage while allowing the receiver to reconstruct the original data exactly.
+The objective is to reduce bandwidth usage while allowing the receiver to reconstruct the original telemetry data without any loss.
 
 ---
 
@@ -34,35 +34,25 @@ The goal is to reduce bandwidth usage while allowing the receiver to reconstruct
 
 ## Greedy Algorithm – Huffman Coding
 
-Huffman Coding is a Greedy Algorithm that repeatedly combines the two least frequent symbols to construct an optimal prefix-free binary tree.
+Huffman Coding is a Greedy Algorithm that repeatedly combines the two symbols with the lowest frequencies to construct an optimal prefix-free binary tree.
 
-This guarantees the minimum average number of bits required to encode the telemetry data.
+This guarantees the minimum average number of bits required for encoding the sensor telemetry.
 
 ---
 
 # Why Other Design Techniques Were Rejected
 
 ## Divide and Conquer
-
-The problem cannot be divided into independent subproblems because all symbol frequencies contribute to one optimal Huffman tree.
-
----
+The problem cannot be divided into independent subproblems because every symbol frequency contributes to constructing a single optimal Huffman Tree.
 
 ## Dynamic Programming
-
-Dynamic Programming is unnecessary because Huffman Coding already provides an optimal solution through a greedy strategy without storing overlapping subproblems.
-
----
+Dynamic Programming is unnecessary because Huffman Coding already guarantees the optimal solution using a greedy strategy without solving overlapping subproblems.
 
 ## Backtracking
-
-Backtracking explores many possible trees, resulting in exponential complexity and making it unsuitable for real-time telemetry compression.
-
----
+Backtracking explores many possible coding trees, resulting in exponential time complexity, making it unsuitable for real-time compression.
 
 ## Branch and Bound
-
-Branch and Bound is mainly used for optimization search problems. Constructing a Huffman tree does not require searching multiple candidate solutions.
+Branch and Bound is mainly used for optimization search problems. Huffman Coding constructs the optimal tree directly without searching multiple candidate solutions.
 
 ---
 
@@ -70,7 +60,7 @@ Branch and Bound is mainly used for optimization search problems. Constructing a
 
 1. Read all sensor symbols and their frequencies.
 2. Insert every symbol into a Min Priority Queue.
-3. Remove the two nodes with the smallest frequencies.
+3. Remove the two nodes having the smallest frequencies.
 4. Merge them into a new internal node.
 5. Insert the merged node back into the priority queue.
 6. Repeat until only one node remains.
@@ -80,7 +70,7 @@ Branch and Bound is mainly used for optimization search problems. Constructing a
 
 ---
 
-# Data Structure Used
+# Data Structures Used
 
 - Min Heap (Priority Queue)
 - Binary Tree (Huffman Tree)
@@ -95,7 +85,7 @@ These data structures efficiently support selecting the two minimum-frequency no
 |-----------|-----------------|
 | Build Priority Queue | O(n log n) |
 | Huffman Tree Construction | O(n log n) |
-| Generate Codes | O(n) |
+| Generate Huffman Codes | O(n) |
 
 ### Overall Time Complexity
 
@@ -109,31 +99,31 @@ These data structures efficiently support selecting the two minimum-frequency no
 
 # Proof of Correctness
 
-At every step, Huffman Coding selects the two least frequent symbols and merges them into a new node.
+At every iteration, Huffman Coding selects the two least frequent symbols and merges them into a new internal node.
 
-This greedy choice minimizes the weighted path length of the final tree.
+This greedy choice minimizes the weighted path length of the resulting Huffman Tree.
 
-Therefore, Huffman Coding always produces an optimal prefix-free code with the minimum average bits per message.
+Hence, Huffman Coding always produces an optimal prefix-free encoding with the minimum average number of bits per message.
 
 ---
 
 # Empirical Performance Analysis
 
-The implementation was executed on multiple input sizes.
+The implementation was tested using multiple input sizes.
 
-Execution times were recorded in:
+The execution times were recorded in:
 
 ```
 results/timing.csv
 ```
 
-The timing graph generated from the recorded values is available in:
+The corresponding execution-time graph is available in:
 
 ```
 results/timing_plot.png
 ```
 
-The observed running time closely follows the expected **O(n log n)** complexity of Huffman Coding.
+The observed performance closely follows the expected **O(n log n)** time complexity.
 
 ---
 
@@ -141,7 +131,7 @@ The observed running time closely follows the expected **O(n log n)** complexity
 
 The worst case occurs when the number of distinct sensor symbols increases significantly.
 
-As more unique symbols are added, the Huffman tree becomes larger, increasing the number of priority queue operations.
+As more unique symbols are introduced, the Huffman Tree grows larger, resulting in additional priority queue operations while still maintaining **O(n log n)** complexity.
 
 ---
 
@@ -168,7 +158,7 @@ Batch_8
 
 # Running the Project
 
-Follow the instructions provided in:
+Follow the instructions provided in
 
 ```
 code/RUN.md
@@ -178,23 +168,31 @@ code/RUN.md
 
 # Presentation
 
-The presentation video can be viewed using the following Google Drive link:
-
 **Presentation Video**
 
 https://drive.google.com/file/d/1H49ITVsPjIPwAGnax-xJIQpMN-MjRkGg/view?usp=drivesdk
 
 ---
 
-# Team Contribution
+# Team Members
+
+| Roll No | Name | GitHub Username |
+|---------|------|-----------------|
+| 24I371 | Tirumeni Vikash A | @tirumeni |
+| 25I461 | Ashwath P M | @pmashwath22 |
+| 24I370 | Thiribhuvan V | @Thiribhuvan |
+| 24I305 | Arul Selvan A | @avsarul06 |
+
+---
+
+# Team Contributions
 
 | Member | Contribution |
 |---------|--------------|
-| Member 1 | Problem Analysis & Algorithm Selection |
-| Member 2 | Huffman Algorithm Implementation |
-| Member 3 | Backend Development |
-| Member 4 | Frontend Development |
-| Member 5 | Testing, Documentation & Presentation |
+| Tirumeni Vikash A | Problem Analysis, Algorithm Selection, Documentation |
+| Ashwath P M | Huffman Algorithm Implementation |
+| Thiribhuvan V | Backend Development, Performance Analysis |
+| Arul Selvan A | Frontend Development, Testing, Documentation & Presentation |
 
 ---
 
@@ -203,7 +201,7 @@ https://drive.google.com/file/d/1H49ITVsPjIPwAGnax-xJIQpMN-MjRkGg/view?usp=drive
 1. Thomas H. Cormen, *Introduction to Algorithms (CLRS)*.
 2. D. A. Huffman, *A Method for the Construction of Minimum-Redundancy Codes*.
 3. GeeksforGeeks – Huffman Coding.
-4. PSG College of Technology – DAA Course Material.
+4. PSG College of Technology – Design and Analysis of Algorithms Course Material.
 
 ---
 
@@ -240,4 +238,12 @@ DAA_Assignment_2026/
 - ✅ Slides Prepared
 - ✅ Presentation Video Linked
 - ✅ Source Code Uploaded
+- ✅ All Team Members Contributed
 - ✅ Project Successfully Submitted
+
+---
+
+**Batch:** Batch_8  
+**Project:** Sensor Telemetry Compression using Huffman Coding  
+**Institution:** PSG College of Technology  
+**Academic Year:** 2026–27
