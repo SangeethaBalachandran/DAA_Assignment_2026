@@ -193,6 +193,13 @@ https://docs.google.com/document/d/1W3_5JTwUE8tu7Tx3pXHuf1E7A-rVlzlK/edit?usp=dr
 
 # Presentation
 
+ppt link is available at:
+
+🎥 **Google Drive**
+
+https://docs.google.com/presentation/d/1O-RZSYBkiE4UhwX9VQRxGB1XfCR5wyhW/edit?usp=drive_link&ouid=106532429368019877518&rtpof=true&sd=true
+
+---
 The complete project presentation video is available at:
 
 🎥 **Google Drive**
