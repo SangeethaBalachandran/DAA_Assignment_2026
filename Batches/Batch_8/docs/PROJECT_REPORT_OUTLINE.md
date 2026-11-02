@@ -18,7 +18,7 @@
 - **List of Figures, List of Tables, List of Algorithms**
 - **List of Mathematical Symbols & Abbreviations**
 
----
+----
 
 ### Chapter 1: Introduction & Problem Context
 - 1.1 The Narrowband Industrial IoT Bottleneck (RS-485, Sub-GHz, PLC, Satellite).
