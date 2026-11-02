@@ -401,6 +401,6 @@ Overall, the project demonstrates that the Greedy Method provides an efficient a
 
 The team presentation explains the problem, selected algorithm, implementation, correctness, complexity, experimental evaluation, and possible extensions.
 
-**Presentation recording:** [Insert Google Drive or YouTube link here]
+**Presentation recording:** https://drive.google.com/drive/folders/10ZtTMHnU_-85rzs5a_r1iK3KEgygjNJL
 
 **Presentation slides:** `slides.pdf`
