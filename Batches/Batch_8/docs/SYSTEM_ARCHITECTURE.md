@@ -1,5 +1,5 @@
 # System Architecture Specification
-## Industrial IoT Telemetry Compression & Network Optimization Platform
+## Industrial IoT Telemetry Compression & Network Optimization Platform.
 
 - **Project:** Industrial Edge Gateway Telemetry Compression System
 - **Classification:** Full-Stack Architecture & Systems Reference
