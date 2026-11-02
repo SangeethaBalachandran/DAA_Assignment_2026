@@ -16,7 +16,7 @@ This project presents an efficient solution for compressing sensor telemetry dat
 
 The objective is to reduce the bandwidth and storage required for transmitting IoT sensor data while ensuring that the original information can be reconstructed exactly after decompression.
 
----
+----
 
 # Problem Statement
 
