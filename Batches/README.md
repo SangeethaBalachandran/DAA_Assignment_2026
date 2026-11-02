@@ -214,7 +214,7 @@ https://drive.google.com/file/d/1H49ITVsPjIPwAGnax-xJIQpMN-MjRkGg/view?usp=drive
 |---------|-------------------|----------------|
 | 24I371 | Tirumeni Vikash A | @tirumeni |
 | 25I461 | Ashwath P M | @pmashwath22 |
-| 24I370 | Thiribhuvan V | @Thiribhuvan |
+| 24I370 | Thiribhuvan V | @thiribhuvan |
 | 24I305 | Arul Selvan A | @avsarul06 |
 
 ---
