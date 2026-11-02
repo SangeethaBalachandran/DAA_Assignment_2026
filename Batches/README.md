@@ -8,7 +8,7 @@ Repository for the Design and Analysis of Algorithms (DAA) Assignment submission
 **Semester:** Odd Semester (5th)  
 **Academic Year:** 2026–27
 
----
+----
 
 # Project Overview
 
