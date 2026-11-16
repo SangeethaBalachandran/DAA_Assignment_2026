@@ -53,7 +53,7 @@ cd DAA_Assignment_2026
 Inside `Batches/`, create **one** folder named with your batch number, for example `Batch_7`:
 
 ```
-Batches/Batch_7/
+Batches/Batch_8/
 ├── README.md              ← your report (from Instructions/REPORT_TEMPLATE.md)
 ├── slides.pdf
 ├── code/
@@ -81,8 +81,8 @@ Batches/Batch_7/
 Each member commits their own work:
 
 ```bash
-git add Batches/Batch_7
-git commit -m "Batch_7: <what you added>"
+git add Batches/Batch_8
+git commit -m "Batch_8: <what you added>"
 git push origin main
 ```
 
