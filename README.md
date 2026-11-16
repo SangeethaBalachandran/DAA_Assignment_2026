@@ -61,9 +61,8 @@ Batches/Batch_7/
 │   ├── rejected_alternative.<ext> ← one rejected technique, for comparison
 │   ├── generate_inputs.<ext>      ← produces the inputs used for timing
 │   └── RUN.md                     ← exact commands to compile and run
-└── results/
-    ├── timing.csv                 ← n, time_chosen_ms, time_rejected_ms
-    └── timing_plot.png
+├── timing.csv                 ← n, time_chosen_ms, time_rejected_ms
+└── timing_plot.png
 ```
 
 - Do **not** name files or folders after the design technique or a textbook problem name (for example, no `greedy.cpp`, no `Q1_Knapsack/`).
@@ -113,7 +112,7 @@ DAA_Assignment_2026/
 ├── Instructions/
 │   └── REPORT_TEMPLATE.md
 └── Batches/
-    ├── Batch_1/
+    ├── Batch_8/
     │   ├── README.md
     │   ├── slides.pdf
     │   ├── code/
