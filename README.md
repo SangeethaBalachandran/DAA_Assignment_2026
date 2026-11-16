@@ -130,7 +130,7 @@ DAA_Assignment_2026/
 - [ ] Technique is identified and the other four are rejected with concrete evidence
 - [ ] Trace on the given instance is complete and the answer is correct
 - [ ] Code compiles and runs with the commands in `code/RUN.md`
-- [ ] `results/timing.csv` and `results/timing_plot.png` are present (at least five input sizes)
+- [ ] `batch8/timing.csv` and `batch8/timing_plot.png` are present (at least five input sizes)
 - [ ] `slides.pdf` is present
 - [ ] Presentation link opens in a private browser window and is at most 12 minutes
 - [ ] Every member has commits from their own account
