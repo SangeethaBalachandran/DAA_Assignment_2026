@@ -53,7 +53,7 @@ cd DAA_Assignment_2026
 Inside `Batches/`, create **one** folder named with your batch number, for example `Batch_7`:
 
 ```
-Batches/Batch_7/
+Batches/Batch_8/
 ├── README.md              ← your report (from Instructions/REPORT_TEMPLATE.md)
 ├── slides.pdf
 ├── code/
@@ -61,9 +61,8 @@ Batches/Batch_7/
 │   ├── rejected_alternative.<ext> ← one rejected technique, for comparison
 │   ├── generate_inputs.<ext>      ← produces the inputs used for timing
 │   └── RUN.md                     ← exact commands to compile and run
-└── results/
-    ├── timing.csv                 ← n, time_chosen_ms, time_rejected_ms
-    └── timing_plot.png
+├── timing.csv                 ← n, time_chosen_ms, time_rejected_ms
+└── timing_plot.png
 ```
 
 - Do **not** name files or folders after the design technique or a textbook problem name (for example, no `greedy.cpp`, no `Q1_Knapsack/`).
@@ -82,8 +81,8 @@ Batches/Batch_7/
 Each member commits their own work:
 
 ```bash
-git add Batches/Batch_7
-git commit -m "Batch_7: <what you added>"
+git add Batches/Batch_8
+git commit -m "Batch_8: <what you added>"
 git push origin main
 ```
 
@@ -113,7 +112,7 @@ DAA_Assignment_2026/
 ├── Instructions/
 │   └── REPORT_TEMPLATE.md
 └── Batches/
-    ├── Batch_1/
+    ├── Batch_8/
     │   ├── README.md
     │   ├── slides.pdf
     │   ├── code/
@@ -130,7 +129,7 @@ DAA_Assignment_2026/
 - [ ] Technique is identified and the other four are rejected with concrete evidence
 - [ ] Trace on the given instance is complete and the answer is correct
 - [ ] Code compiles and runs with the commands in `code/RUN.md`
-- [ ] `results/timing.csv` and `results/timing_plot.png` are present (at least five input sizes)
+- [ ] `batch8/timing.csv` and `batch8/timing_plot.png` are present (at least five input sizes)
 - [ ] `slides.pdf` is present
 - [ ] Presentation link opens in a private browser window and is at most 12 minutes
 - [ ] Every member has commits from their own account

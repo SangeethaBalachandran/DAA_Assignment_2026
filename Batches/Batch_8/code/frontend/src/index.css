@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+@layer base {
+  body {
+    background-color: #0F1117;
+    color: #F8FAFC;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Custom dark scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090C12;
+}
+::-webkit-scrollbar-thumb {
+  background: #273244;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B4B64;
+}
+
+/* React Flow custom styling in dark mode */
+.react-flow__node {
+  border-radius: 12px;
+}
+.react-flow__handle {
+  width: 6px;
+  height: 6px;
+  background: #06B6D4;
+}
+
+/* Subtle dot grid pattern */
+.bg-grid-dots {
+  background-image: radial-gradient(#273244 1px, transparent 1px);
+  background-size: 16px 16px;
+}
